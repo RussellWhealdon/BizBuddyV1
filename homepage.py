@@ -19,4 +19,16 @@ st.markdown("<h1 style='text-align: center;'>Welcome to your Bizness Buddy</h1>"
 st.markdown("<h2 style='text-align: center;'>Let's take your business to the next level</h2>", unsafe_allow_html=True)
 
 
+# Initialize LLM context with business context on app load
+initialize_llm_context()
+
+# Generate and display each summary with LLM analysis
+def display_report_with_llm(summary_func, llm_prompt):
+    # Generate summary
+    summary = summary_func()
+
+    # Query LLM with specific prompt
+    llm_response = query_gpt(llm_prompt, summary)
+    return llm_response
+
 
