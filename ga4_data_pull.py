@@ -292,11 +292,16 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
         percentage_change = abs(percentage_change)
         color = "green" if change_direction == "up" else "red"  # Green for positive, red for negative
         
+        # Customize the metric display
+        if metric_name == "Average Session Duration":
+            display_metric = f"Average Time on Site: {round(current_value)} seconds"
+        else:
+            display_metric = f"**{round(current_value)} {metric_name}**"
+        
         # Generate the display copy for each metric
         st.markdown(
-            f"**{round(current_value, 2) if metric_name == 'Average Session Duration' else round(current_value)} {metric_name}** - _{description}_<br>"
+            f"{display_metric} - _{description}_<br>"
             f"<span style='font-size: smaller;'>This is {change_direction} "
             f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
             unsafe_allow_html=True
         )
-
