@@ -370,3 +370,41 @@ def describe_top_sources(acquisition_summary):
         
         st.markdown(f"**{source} - {visitors} visitors**")
         st.markdown(f"{descriptions.get(source, 'Description not available for this source.')}")
+
+def generate_page_summary(landing_page_summary):
+    # Map page paths to friendly names
+    page_name_map = {
+        "/": "Home",
+        "/contact": "Contact",
+        "/ratesinsurance": "Rates & Insurance",
+        "/about": "About",
+        "/faqs": "FAQs",
+        "/adults-nutrition-counseling": "Adults",
+        "/teens-nutrition-counseling": "Teens"
+    }
+
+    # Filter the DataFrame to only include the specified pages
+    filtered_summary = landing_page_summary[landing_page_summary["Page Path"].isin(page_name_map.keys())]
+
+    # Rename Page Path to friendly names
+    filtered_summary["Page Name"] = filtered_summary["Page Path"].map(page_name_map)
+
+    # Display summary for each relevant page
+    for _, row in filtered_summary.iterrows():
+        page_name = row["Page Name"]
+        visitors = row["Total_Visitors"]
+        sessions = row["Sessions"]
+        avg_session_duration = round(row["Avg_Session_Duration"], 2)
+        conversion_rate = (
+            f"Conversion Rate: {row['Conversion Rate (%)']}%" if page_name == "Contact" else ""
+        )
+        
+        # Display the page summary
+        st.markdown(
+            f"### {page_name}\n"
+            f"Visitors: {visitors}  \n"
+            f"Sessions: {sessions}  \n"
+            f"Average Session Duration: {avg_session_duration} seconds  \n"
+            f"{conversion_rate}"
+        )
+
