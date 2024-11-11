@@ -339,22 +339,22 @@ def describe_top_sources(acquisition_summary):
     # Hard-coded descriptions for specific sources
     descriptions = {
         "google": (
-            "A visitor coming from Google means they reached your site through a Google service. "
+            "_A visitor coming from Google means they reached your site through a Google service. "
             "This could include organic or paid search, a link from Gmail, Google Drive, or even "
-            "Google Ads and other platforms in the Google ecosystem."
+            "Google Ads and other platforms in the Google ecosystem._"
         ),
         "(direct)": (
-            "A visitor coming from (direct) means they typed your website URL directly into their browser, "
-            "clicked a bookmark, or came from an untracked link like a non-HTTP email or offline document."
+            "_A visitor coming from (direct) means they typed your website URL directly into their browser, "
+            "clicked a bookmark, or came from an untracked link like a non-HTTP email or offline document._"
         ),
         "manage.wix.com": (
-            "A visitor coming from manage.wix.com indicates they were redirected from the Wix site editor, "
-            "often during testing or setup."
+            "_A visitor coming from manage.wix.com indicates they were redirected from the Wix site editor, "
+            "often during testing or setup._"
         )
     }
     
     # Display each top source with description
-    st.markdown("### Top 3 Traffic Sources")
+    st.markdown("### Top Sources Overview")
     for _, row in top_sources.iterrows():
         source = row['Session Source']
         visitors = row['Visitors']
