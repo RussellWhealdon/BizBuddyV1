@@ -50,7 +50,7 @@ def main():
         concrete tips for improvement. Limit this repsonse to ~ 200 words!
         """
     )
-    st.write(summarize_acquisition_sources(ga_data)[1])
+    st.write(summarize_monthly_data(ga_data)[1])
     
       
 # Execute the main function only when the script is run directly
