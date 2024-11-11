@@ -41,7 +41,7 @@ def main():
     
     with col2:
         search_data = fetch_search_console_data()
-        response = display_report_with_llm(
+        response = (
             lambda: summarize_search_queries(search_data),
             """
             Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
@@ -49,6 +49,8 @@ def main():
             concrete tips for improvement. Limit this repsonse to ~ 200 words!
             """
         )
+        st.write(response)
+    
       
 # Execute the main function only when the script is run directly
 if __name__ == "__main__":
