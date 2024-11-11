@@ -102,8 +102,11 @@ def main():
     st.markdown(response)
 
   with col4:
-    search_data = fetch_search_console_data()
-    st.dataframe(search_data['Search Query'])
+    
+    sq_col1, sq_col2 = st.columns(2)
+    with sq_col1:
+      search_data = fetch_search_console_data()
+      st.dataframe(search_data['Search Query'], use_container_width = True)
  
     
       
