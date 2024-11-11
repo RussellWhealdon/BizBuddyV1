@@ -267,24 +267,34 @@ def summarize_last_month_data(acquisition_data):
 
 import streamlit as st
 
-def generate_total_visitors_copy(current_summary_df, last_month_summary_df):
-    # Extract Total Visitors from both summaries
-    current_visitors = current_summary_df.loc[current_summary_df['Metric'] == 'Total Visitors', 'Value'].values[0]
-    last_month_visitors = last_month_summary_df.loc[last_month_summary_df['Metric'] == 'Total Visitors', 'Value'].values[0]
+def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
+    # List of metrics and their descriptions
+    metrics = {
+        "Total Visitors": "the number of people that have visited your site.",
+        "New Visitors": "the number of new visitors this month.",
+        "Total Sessions": "the total number of sessions on your site this month.",
+        "Total Leads": "the number of leads generated this month."
+    }
     
-    # Calculate the percentage change from last month
-    if last_month_visitors > 0:
-        percentage_change = ((current_visitors - last_month_visitors) / last_month_visitors) * 100
-    else:
-        percentage_change = 0  # Avoid division by zero
-    
-    change_direction = "up" if percentage_change > 0 else "down"
-    percentage_change = abs(percentage_change)
-    color = "green" if change_direction == "up" else "red"  # Green for positive, red for negative
-    
-    st.markdown(
-        f"**{round(current_visitors)} Total Visitors** - _the number of people that have visited your site._<br>"
-        f"<span style='font-size: smaller;'>This is {change_direction} "
-        f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
-        unsafe_allow_html=True
-    )
+    for metric_name, description in metrics.items():
+        # Extract metric values for the current and last month
+        current_value = current_summary_df.loc[current_summary_df['Metric'] == metric_name, 'Value'].values[0]
+        last_month_value = last_month_summary_df.loc[last_month_summary_df['Metric'] == metric_name, 'Value'].values[0]
+        
+        # Calculate the percentage change
+        if last_month_value > 0:
+            percentage_change = ((current_value - last_month_value) / last_month_value) * 100
+        else:
+            percentage_change = 0  # Avoid division by zero
+        
+        change_direction = "up" if percentage_change > 0 else "down"
+        percentage_change = abs(percentage_change)
+        color = "green" if change_direction == "up" else "red"  # Green for positive, red for negative
+        
+        # Generate the display copy for each metric
+        st.markdown(
+            f"**{round(current_value)} {metric_name}** - _{description}_<br>"
+            f"<span style='font-size: smaller;'>This is {change_direction} "
+            f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
+            unsafe_allow_html=True
+        )
