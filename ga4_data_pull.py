@@ -165,7 +165,7 @@ def summarize_landing_pages(acquisition_data):
 
 def summarize_monthly_data(acquisition_data):
     # Get the start of this month
-     acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce')
+    acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce')
 
     # Get the start of this month
     today = date.today()
