@@ -294,7 +294,7 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
         
         # Customize the metric display
         if metric_name == "Average Session Duration":
-            display_metric = f"Average Time on Site: {round(current_value)} seconds"
+            display_metric = f"**Average Time on Site: {round(current_value)} seconds**"
         else:
             display_metric = f"**{round(current_value)} {metric_name}**"
         
