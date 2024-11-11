@@ -271,7 +271,7 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
     # List of metrics and their descriptions
     metrics = {
         "Total Visitors": "the number of people that have visited your site.",
-        "New Visitors": "the number of people visiting your site for the first time this month.",
+        "New Visitors": "the number of people visiting your site for the first time.",
         "Total Sessions": "the total number of times people have visited your site this month, including repeat visits.",
         "Total Leads": "the number of leads generated this month.",
         "Average Session Duration": "the average amount of time users spent on your site per session."
