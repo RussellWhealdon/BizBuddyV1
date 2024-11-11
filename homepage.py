@@ -49,7 +49,7 @@ def main():
             concrete tips for improvement. Limit this repsonse to ~ 200 words!
             """
         )
-        st.write(summarize_acquisition_sources())
+        st.write(summarize_acquisition_sources(acquisiton_data))
     
       
 # Execute the main function only when the script is run directly
