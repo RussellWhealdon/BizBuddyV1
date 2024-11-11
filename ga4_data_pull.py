@@ -124,21 +124,23 @@ def summarize_acquisition_sources(acquisition_data):
     return summary, source_summary
 
 
-# Summarize landing pages
 def summarize_landing_pages(acquisition_data):
     # Check if required columns are in the dataframe
-    required_cols = ["Page Path", "Sessions", "Bounce Rate", "Leads"]
+    required_cols = ["Page Path", "Sessions", "Bounce Rate", "Leads", "Total Visitors", "Pageviews", "Average Session Duration"]
     if not all(col in acquisition_data.columns for col in required_cols):
         raise ValueError("Data does not contain required columns.")
     
     # Convert columns to numeric, if possible, and fill NaNs
-    acquisition_data["Sessions"] = pd.to_numeric(acquisition_data["Sessions"], errors='coerce').fillna(0)
-    acquisition_data["Bounce Rate"] = pd.to_numeric(acquisition_data["Bounce Rate"], errors='coerce').fillna(0)
-    acquisition_data["Leads"] = pd.to_numeric(acquisition_data["Leads"], errors='coerce').fillna(0)
+    numeric_cols = ["Sessions", "Bounce Rate", "Leads", "Total Visitors", "Pageviews", "Average Session Duration"]
+    for col in numeric_cols:
+        acquisition_data[col] = pd.to_numeric(acquisition_data[col], errors='coerce').fillna(0)
 
     # Group by Page Path to get aggregated metrics
     page_summary = acquisition_data.groupby("Page Path").agg(
         Sessions=("Sessions", "sum"),
+        Total_Visitors=("Total Visitors", "sum"),
+        Pageviews=("Pageviews", "sum"),
+        Avg_Session_Duration=("Average Session Duration", "mean"),
         Bounce_Rate=("Bounce Rate", "mean"),
         Conversions=("Leads", "sum")  # Use Leads for conversions
     ).reset_index()
@@ -149,20 +151,24 @@ def summarize_landing_pages(acquisition_data):
     # Sort by Sessions in descending order
     page_summary = page_summary.sort_values(by="Sessions", ascending=False)
     
-    # Format summary text for LLM
+    # Format summary text for LLM (optional)
     summary = "Landing Page Performance Summary:\n"
-    summary += "Page Path | Sessions | Avg. Bounce Rate (%) | Conversion Rate (%)\n"
-    summary += "-" * 70 + "\n"
+    summary += "Page Path | Sessions | Total Visitors | Pageviews | Avg. Session Duration (s) | Bounce Rate (%) | Conversion Rate (%)\n"
+    summary += "-" * 110 + "\n"
 
     for _, row in page_summary.iterrows():
         page_path = row["Page Path"]
         sessions = row["Sessions"]
+        total_visitors = row["Total_Visitors"]
+        pageviews = row["Pageviews"]
+        avg_session_duration = round(row["Avg_Session_Duration"], 2)
         bounce_rate = round(row["Bounce_Rate"], 2)
         conversion_rate = row["Conversion Rate (%)"]
         
-        summary += f"{page_path} | {sessions} | {bounce_rate}% | {conversion_rate}%,\n"
+        summary += f"{page_path} | {sessions} | {total_visitors} | {pageviews} | {avg_session_duration} | {bounce_rate}% | {conversion_rate}%\n"
 
     return summary, page_summary
+
 
 
 def summarize_monthly_data(acquisition_data):
