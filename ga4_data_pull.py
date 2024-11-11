@@ -252,7 +252,7 @@ def summarize_last_month_data(acquisition_data):
     
     # Create a summary dataframe
     summary_df = pd.DataFrame({
-        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Average Time on Site"],
+        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Average Session Duration"],
         "Value": [total_visitors, new_visitors, total_sessions, total_leads, avg_time_on_site]
     })
 
