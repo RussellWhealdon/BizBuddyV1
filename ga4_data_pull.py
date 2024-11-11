@@ -270,10 +270,10 @@ import streamlit as st
 def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
     # List of metrics and their descriptions
     metrics = {
-        "Total Visitors": "the number of people that have visited your site.",
-        "New Visitors": "the number of new visitors this month.",
-        "Total Sessions": "the total number of sessions on your site this month.",
-        "Total Leads": "the number of leads generated this month."
+        "Total Visitors": "number of people that have visited your site.",
+        "New Visitors": "number of people visiting your site for the first time.",
+        "Total Sessions": "number of times people have visited your site this month, including repeat visits.",
+        "Total Leads": "the number of contacts generated this month."
     }
     
     for metric_name, description in metrics.items():
