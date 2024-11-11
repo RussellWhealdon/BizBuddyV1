@@ -389,7 +389,10 @@ def generate_page_summary(landing_page_summary):
     # Rename Page Path to friendly names
     filtered_summary["Page Name"] = filtered_summary["Page Path"].map(page_name_map)
 
-    # Display summary for each relevant page
+    # Initialize a summary string to track all page info for LLM
+    llm_summary = "### Page Performance Summary\n\n"
+
+    # Display summary for each relevant page and append to LLM summary
     for _, row in filtered_summary.iterrows():
         page_name = row["Page Name"]
         visitors = row["Total_Visitors"]
@@ -408,3 +411,16 @@ def generate_page_summary(landing_page_summary):
             f"{conversion_rate}",
             unsafe_allow_html=True
         )
+        
+        # Append to LLM summary
+        llm_summary += (
+            f"**{page_name}**: Visitors: {visitors}, "
+            f"Sessions: {sessions}, "
+            f"Average Session Duration: {avg_session_duration} seconds"
+        )
+        if page_name == "Contact":
+            llm_summary += f", Conversion Rate: {row['Conversion Rate (%)']}%"
+        llm_summary += "\n\n"
+
+    # Store LLM summary in session state for later use
+    st.session_state["page_summary_llm"] = llm_summary
