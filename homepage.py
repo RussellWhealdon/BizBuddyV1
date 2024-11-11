@@ -97,7 +97,7 @@ def main():
     generate_page_summary(landing_page_summary)
 
     llm_input = st.session_state.get("page_summary_llm", "")
-    response = query_gpt("Provide insights based on the following page performance data, note that there is no CTAs on any page besides the Home. We need to think of ways to drive more people to the contact page. Limit your response to 2-3 bullet points:", llm_input)
+    response = query_gpt("Provide insights based on the following page performance data, note that there is no CTAs on any page besides the Home. We need to think of ways to drive more people to the contact page. State only the bullets, no pre text. Limit your response to 2-3 bullet points:", llm_input)
     st.markdown("### Insights from AI")
     st.markdown(response)
  
