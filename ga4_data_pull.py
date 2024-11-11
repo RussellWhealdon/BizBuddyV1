@@ -4,7 +4,7 @@ import calendar
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
 from google.analytics.data_v1beta.types import RunReportRequest, DateRange, Dimension, Metric
 import streamlit as st
-import altair as alt
+import plotly.express as px
 
 # Load the secrets for the service account path and property ID
 service_account_info = st.secrets["google_service_account"]
@@ -335,4 +335,3 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
 
     # Display in Streamlit
     st.plotly_chart(fig, use_container_width=True)
-
