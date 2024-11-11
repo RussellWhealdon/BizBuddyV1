@@ -30,7 +30,6 @@ def fetch_ga4_extended_data():
             Metric(name="activeUsers"),                # Total visitors (unique users)
             Metric(name="sessions"),                   # Total sessions
             Metric(name="screenPageViews"),            # Total pageviews
-            Metric(name="pagesPerSession"),            # Pages per session
             Metric(name="bounceRate"),                 # Bounce rate
             Metric(name="averageSessionDuration"),     # Avg. session duration
             Metric(name="newUsers"),                   # New visitors
@@ -55,7 +54,6 @@ def fetch_ga4_extended_data():
         active_users = row.metric_values[0].value
         sessions = row.metric_values[1].value
         pageviews = row.metric_values[2].value
-        pages_per_session = row.metric_values[3].value
         bounce_rate = row.metric_values[4].value
         avg_session_duration = row.metric_values[5].value
         new_users = row.metric_values[6].value
@@ -63,14 +61,14 @@ def fetch_ga4_extended_data():
         
         rows.append([
             date, page_path, session_source, campaign_name, source_medium, lp_query, event_name,
-            active_users, sessions, pageviews, pages_per_session, bounce_rate, avg_session_duration, 
+            active_users, sessions, pageviews, bounce_rate, avg_session_duration, 
             new_users, event_count
         ])
     
     # Create DataFrame
     df = pd.DataFrame(rows, columns=[
         'Date', 'Page Path', 'Session Source', 'Campaign Name', 'Source/Medium', 'Lp/Query', 'Event Name',
-        'Total Visitors', 'Sessions', 'Pageviews', 'Pages per Session', 'Bounce Rate', 'Avg. Session Duration',
+        'Total Visitors', 'Sessions', 'Pageviews', 'Bounce Rate', 'Avg. Session Duration',
         'New Users', 'Event Count'
     ])
     
