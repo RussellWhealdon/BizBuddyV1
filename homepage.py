@@ -30,10 +30,13 @@ def display_report_with_llm(summary_func, llm_prompt):
     llm_response = query_gpt(llm_prompt, summary)
     return llm_response
 
-
+# Run main function
 def main():
 
-
+  
+# Execute the main function only when the script is run directly
+if __name__ == "__main__":
+    main()
   
 
 
