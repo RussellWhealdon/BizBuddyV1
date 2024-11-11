@@ -179,7 +179,7 @@ def summarize_monthly_data(acquisition_data):
     monthly_data = acquisition_data[acquisition_data['Date'] >= start_of_period]
     
     # Check if required columns are in the dataframe
-    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration", "Session Source"]
+    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Average Session Duration", "Session Source"]
     if not all(col in monthly_data.columns for col in required_cols):
         raise ValueError("Data does not contain required columns.")
     
