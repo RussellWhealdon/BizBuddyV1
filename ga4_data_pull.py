@@ -308,3 +308,22 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
             f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
             unsafe_allow_html=True
         )
+
+def plot_acquisition_pie_chart(acquisition_summary):
+    # Filter data for pie chart
+    source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
+    source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
+    
+    # Plot pie chart
+    fig, ax = plt.subplots()
+    ax.pie(
+        source_data['Visitors'],
+        labels=source_data['Session Source'],
+        autopct='%1.1f%%',
+        startangle=90
+    )
+    ax.axis('equal')  # Equal aspect ratio ensures pie chart is circular
+    plt.title('Traffic Sources Breakdown')
+    
+    st.pyplot(fig)
+
