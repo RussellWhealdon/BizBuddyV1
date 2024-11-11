@@ -24,8 +24,7 @@ def fetch_ga4_extended_data():
             Dimension(name="firstUserCampaignName"),    # Campaign details
             Dimension(name="firstUserSourceMedium"),    # Original source/medium
             Dimension(name="landingPagePlusQueryString"),
-            Dimension(name="eventName"),
-            Dimension(name="exitPagePath")              # For exit pages
+            Dimension(name="eventName"),             # For exit pages
         ],
         metrics=[
             Metric(name="activeUsers"),                # Total visitors (unique users)
@@ -35,8 +34,7 @@ def fetch_ga4_extended_data():
             Metric(name="bounceRate"),                 # Bounce rate
             Metric(name="averageSessionDuration"),     # Avg. session duration
             Metric(name="newUsers"),                   # New visitors
-            Metric(name="eventCount"),                 # Event counts (e.g., leads)
-            Metric(name="exits")                       # Exit count for each page
+            Metric(name="eventCount"),                 # Event counts (e.g., leads)                       
         ],
         date_ranges=[DateRange(start_date="2024-01-01", end_date=today)],  # Define date range
     )
@@ -53,7 +51,6 @@ def fetch_ga4_extended_data():
         source_medium = row.dimension_values[4].value
         lp_query = row.dimension_values[5].value
         event_name = row.dimension_values[6].value
-        exit_page = row.dimension_values[7].value
             
         active_users = row.metric_values[0].value
         sessions = row.metric_values[1].value
@@ -63,19 +60,18 @@ def fetch_ga4_extended_data():
         avg_session_duration = row.metric_values[5].value
         new_users = row.metric_values[6].value
         event_count = row.metric_values[7].value
-        exits = row.metric_values[8].value
         
         rows.append([
-            date, page_path, session_source, campaign_name, source_medium, lp_query, event_name, exit_page,
+            date, page_path, session_source, campaign_name, source_medium, lp_query, event_name,
             active_users, sessions, pageviews, pages_per_session, bounce_rate, avg_session_duration, 
-            new_users, event_count, exits
+            new_users, event_count
         ])
     
     # Create DataFrame
     df = pd.DataFrame(rows, columns=[
-        'Date', 'Page Path', 'Session Source', 'Campaign Name', 'Source/Medium', 'Lp/Query', 'Event Name', 'Exit Page',
+        'Date', 'Page Path', 'Session Source', 'Campaign Name', 'Source/Medium', 'Lp/Query', 'Event Name',
         'Total Visitors', 'Sessions', 'Pageviews', 'Pages per Session', 'Bounce Rate', 'Avg. Session Duration',
-        'New Users', 'Event Count', 'Exits'
+        'New Users', 'Event Count'
     ])
     
     # Process date columns for easier handling
