@@ -164,7 +164,10 @@ def summarize_landing_pages(acquisition_data):
 
 
 def summarize_monthly_data(acquisition_data):
-    # Get the start of this month
+    # Ensure the Date column is in datetime format, then convert to date
+    if 'Date' not in acquisition_data.columns:
+        raise ValueError("Data does not contain a 'Date' column.")
+    
     acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce').dt.date
 
     # Get the start of this month
@@ -176,13 +179,13 @@ def summarize_monthly_data(acquisition_data):
     
     # Check if required columns are in the dataframe
     required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", 
-                     "Avg. Session Duration", "Pages per Session", "Bounce Rate", "Session Source"]
+                     "Avg. Session Duration", "Bounce Rate", "Session Source"]
     if not all(col in monthly_data.columns for col in required_cols):
         raise ValueError("Data does not contain required columns.")
     
     # Convert columns to numeric, if possible, and fill NaNs
     numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", 
-                    "Avg. Session Duration", "Pages per Session", "Bounce Rate"]
+                    "Avg. Session Duration", "Bounce Rate"]
     for col in numeric_cols:
         monthly_data[col] = pd.to_numeric(monthly_data[col], errors='coerce').fillna(0)
     
@@ -194,7 +197,6 @@ def summarize_monthly_data(acquisition_data):
 
     # Calculate average metrics for the month
     avg_time_on_site = monthly_data["Avg. Session Duration"].mean().round(2)
-    avg_pages_per_session = monthly_data["Pages per Session"].mean().round(2)
     avg_bounce_rate = monthly_data["Bounce Rate"].mean().round(2)
     
     # Summarize acquisition metrics
@@ -213,8 +215,8 @@ def summarize_monthly_data(acquisition_data):
         f"Total Leads: {total_leads}\n"
         f"\n"
         f"Average Time on Site: {avg_time_on_site} seconds\n"
-        f"Pages per Session: {avg_pages_per_session}\n"
         f"Bounce Rate: {avg_bounce_rate}%\n"
     )
     
     return summary, acquisition_summary
+
