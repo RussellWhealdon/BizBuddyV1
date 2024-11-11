@@ -35,7 +35,6 @@ def main():
 
   ga_data = fetch_ga4_extended_data()
   search_data = fetch_search_console_data()
-  st.write(summarize_monthly_data(ga_data)[0])
 
   
   col1, col2, = st.columns(2)
