@@ -49,13 +49,13 @@ def main():
     and how these metrics compare to typical industry standards. Limit your response to 3-4 sentences.
     """
         
-        # Combine summaries into data string for LLM
-        metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
-        
-        ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
-        
-        st.markdown("### Insights from AI")
-        st.markdown(ga_insights)
+    # Combine summaries into data string for LLM
+    metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
+    
+    ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
+    
+    st.markdown("### Insights from AI")
+    st.markdown(ga_insights)
 
   with col2:
     response = (
