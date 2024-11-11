@@ -90,8 +90,11 @@ def main():
     with acq_col2:
       describe_top_sources(summarize_monthly_data(ga_data)[1])
       temp_url = "https://www.google.com/"
-      st.link_button("Paid Search - Helper", temp_url)
-      st.link_button("Social Ads - Helper", temp_url)
+
+    st.markdown("Search and social ads are key to driving traffic, helping businesses reach people actively searching or discovering new products on social platforms.")
+    #Button links
+    st.link_button("Paid Search - Helper", temp_url)
+    st.link_button("Social Ads - Helper", temp_url)
 
   
   ###landing page analysis section
