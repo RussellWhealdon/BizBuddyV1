@@ -102,9 +102,10 @@ def main():
     st.markdown(response)
 
   with col4:
-    
+    st.markdown("### Search Query Analysis")
     sq_col1, sq_col2 = st.columns(2)
     with sq_col1:
+      st.markdown("These are all the search terms that your website has shown up for in the search results. The Google search engine shows websites based on the relevance of a websites information as it realtes to the search terms.")
       search_data = fetch_search_console_data()
       st.dataframe(search_data['Search Query'], use_container_width = True)
  
