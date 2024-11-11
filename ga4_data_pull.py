@@ -407,4 +407,4 @@ def generate_page_summary(landing_page_summary):
             f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp;&nbsp; "
             f"{conversion_rate}",
             unsafe_allow_html=True
-        ))
+        )
