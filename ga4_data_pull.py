@@ -331,6 +331,10 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
     # Display in Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
+def display_acquisition_summary(acquisition_summary):
+    st.markdown("### Acquisition Sources Breakdown")
+    st.dataframe(acquisition_summary)
+
 def describe_top_sources(acquisition_summary):
     # Sort by Visitors and take the top 3
     top_sources = acquisition_summary.sort_values(by='Visitors', ascending=False).head(3)
