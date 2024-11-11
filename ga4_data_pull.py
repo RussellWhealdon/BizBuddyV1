@@ -336,9 +336,18 @@ def describe_top_sources(acquisition_summary):
     # Sort by Visitors and take the top 3
     top_sources = acquisition_summary.sort_values(by='Visitors', ascending=False).head(3)
     
-    # Display description with st.markdown
+    # Hard-coded descriptions for specific sources
+    descriptions = {
+        "Google": "A visitor coming from Google means they found your site through a Google search result, either organic or paid.",
+        "(direct)": "A visitor coming from (direct) means they typed your website URL directly into their browser or came via a bookmarked link.",
+        "manage.wix.com": "A visitor coming from manage.wix.com indicates they were redirected from the Wix site editor, often during testing or setup."
+    }
+    
+    # Display each top source with description
     st.markdown("### Top 3 Traffic Sources")
     for _, row in top_sources.iterrows():
-        st.markdown(
-            f"- **{row['Session Source']}**: {row['Visitors']} visitors"
-        )
+        source = row['Session Source']
+        visitors = row['Visitors']
+        
+        st.markdown(f"**{source} - {visitors} visitors**")
+        st.markdown(f"{descriptions.get(source, 'Description not available for this source.')}")
