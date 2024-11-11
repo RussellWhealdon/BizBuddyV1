@@ -80,7 +80,7 @@ def main():
 
   col3, col4 = st.columns(2)
   with col3:
-    st.markdown("### Landing Page Overview")
+    st.markdown("### Page Overview")
     
     # Ensure the 'Date' column is in the correct format
     ga_data['Date'] = pd.to_datetime(ga_data['Date'], errors='coerce').dt.date
