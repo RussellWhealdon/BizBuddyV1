@@ -69,7 +69,7 @@ def fetch_ga4_extended_data():
     # Create DataFrame
     df = pd.DataFrame(rows, columns=[
         'Date', 'Page Path', 'Session Source', 'Campaign Name', 'Source/Medium', 'Lp/Query', 'Event Name',
-        'Total Visitors', 'Sessions', 'Pageviews', 'Bounce Rate', 'Avg. Session Duration',
+        'Total Visitors', 'Sessions', 'Pageviews', 'Bounce Rate', 'Average Session Duration',
         'New Users', 'Event Count'
     ])
     
@@ -184,7 +184,7 @@ def summarize_monthly_data(acquisition_data):
         raise ValueError("Data does not contain required columns.")
     
     # Convert columns to numeric, if possible, and fill NaNs
-    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration"]
+    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Average Session Duration"]
     for col in numeric_cols:
         monthly_data[col] = pd.to_numeric(monthly_data[col], errors='coerce').fillna(0)
     
@@ -195,7 +195,7 @@ def summarize_monthly_data(acquisition_data):
     total_leads = monthly_data["Leads"].sum()
 
     # Calculate average metrics for the last 30 days
-    avg_time_on_site = monthly_data["Avg. Session Duration"].mean().round(2)
+    avg_time_on_site = monthly_data["Average Session Duration"].mean().round(2)
     
     # Create a summary DataFrame
     summary_df = pd.DataFrame({
@@ -248,7 +248,7 @@ def summarize_last_month_data(acquisition_data):
     total_leads = last_month_data["Leads"].sum()
 
     # Calculate average metrics for last month
-    avg_time_on_site = last_month_data["Avg. Session Duration"].mean().round(2)
+    avg_time_on_site = last_month_data["Average Session Duration"].mean().round(2)
     
     # Create a summary dataframe
     summary_df = pd.DataFrame({
