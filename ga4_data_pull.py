@@ -310,11 +310,6 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
             unsafe_allow_html=True
         )
 
-import altair as alt
-
-import plotly.express as px
-import streamlit as st
-
 def plot_acquisition_pie_chart_plotly(acquisition_summary):
     # Filter data for pie chart
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
