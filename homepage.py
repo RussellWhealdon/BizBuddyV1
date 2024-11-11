@@ -83,7 +83,7 @@ def main():
 
   
   with col2:
-    st.markdown("### Acquisition Overview")
+    st.markdown("<h3 style='text-align: center;'>Acquisition Overview</h3>", unsafe_allow_html=True)
     acq_col1, acq_col2 = st.columns(2)
     with acq_col1:
       plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
@@ -102,7 +102,7 @@ def main():
 
   col3, col4 = st.columns(2)
   with col3:
-    st.markdown("### Page Overview")
+    st.markdown("<h3 style='text-align: center;'>Individual Page Overview</h3>", unsafe_allow_html=True)
     
     # Ensure the 'Date' column is in the correct format
     ga_data['Date'] = pd.to_datetime(ga_data['Date'], errors='coerce').dt.date
@@ -124,7 +124,7 @@ def main():
     st.markdown(response)
 
   with col4:
-    st.markdown("### Search Query Analysis")
+    st.markdown("<h3 style='text-align: center;'>Search Query Analysis</h3>", unsafe_allow_html=True)
     sq_col1, sq_col2 = st.columns(2)
     with sq_col1:
       st.markdown("These are all the search terms that your website has shown up for in the search results. The Google search engine shows websites based on the relevance of a websites information as it realtes to the search terms.")
