@@ -401,10 +401,10 @@ def generate_page_summary(landing_page_summary):
         
         # Display the page summary
         st.markdown(
-            f"**{page_name}** \n"
+            f"**{page_name}**<br>"
             f"Visitors: {visitors} &nbsp;&nbsp;&nbsp; "
             f"Sessions: {sessions} &nbsp;&nbsp;&nbsp; "
             f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp;&nbsp; "
             f"{conversion_rate}",
             unsafe_allow_html=True
-        )
+        ))
