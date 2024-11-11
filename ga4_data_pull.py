@@ -276,7 +276,7 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
         "Total Leads": "the number of leads generated this month.",
         "Average Session Duration": "the average amount of time users spent on your site per session."
     }
-    
+    st.markdown("### 📊 Data Overview: Last 30 Days")
     for metric_name, description in metrics.items():
         # Extract metric values for the current and last month
         current_value = current_summary_df.loc[current_summary_df['Metric'] == metric_name, 'Value'].values[0]
