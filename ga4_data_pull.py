@@ -170,34 +170,37 @@ def summarize_monthly_data(acquisition_data):
     
     acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce').dt.date
 
-    # Get the start of this month
+    # Get the date 30 days ago
     today = date.today()
-    start_of_month = today.replace(day=1)
+    start_of_period = today - timedelta(days=30)
     
-    # Filter data for this month
-    monthly_data = acquisition_data[acquisition_data['Date'] >= start_of_month]
+    # Filter data for the last 30 days
+    monthly_data = acquisition_data[acquisition_data['Date'] >= start_of_period]
     
     # Check if required columns are in the dataframe
-    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", 
-                     "Avg. Session Duration", "Bounce Rate", "Session Source"]
+    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration", "Session Source"]
     if not all(col in monthly_data.columns for col in required_cols):
         raise ValueError("Data does not contain required columns.")
     
     # Convert columns to numeric, if possible, and fill NaNs
-    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", 
-                    "Avg. Session Duration", "Bounce Rate"]
+    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration"]
     for col in numeric_cols:
         monthly_data[col] = pd.to_numeric(monthly_data[col], errors='coerce').fillna(0)
     
-    # Calculate total metrics for the month
+    # Calculate total metrics for the last 30 days
     total_visitors = monthly_data["Total Visitors"].sum()
     new_visitors = monthly_data["New Users"].sum()
     total_sessions = monthly_data["Sessions"].sum()
     total_leads = monthly_data["Leads"].sum()
 
-    # Calculate average metrics for the month
+    # Calculate average metrics for the last 30 days
     avg_time_on_site = monthly_data["Avg. Session Duration"].mean().round(2)
-    avg_bounce_rate = monthly_data["Bounce Rate"].mean().round(2)
+    
+    # Create a summary DataFrame
+    summary_df = pd.DataFrame({
+        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Avg. Time on Site (seconds)"],
+        "Value": [total_visitors, new_visitors, total_sessions, total_leads, avg_time_on_site]
+    })
     
     # Summarize acquisition metrics
     acquisition_summary = monthly_data.groupby("Session Source").agg(
@@ -206,17 +209,5 @@ def summarize_monthly_data(acquisition_data):
         Leads=("Leads", "sum")
     ).reset_index()
     
-    # Format summary for display
-    summary = (
-        f"Monthly Performance Summary (from {start_of_month} to {today}):\n"
-        f"Total Visitors: {total_visitors}\n"
-        f"New Visitors: {new_visitors}\n"
-        f"Total Sessions: {total_sessions}\n"
-        f"Total Leads: {total_leads}\n"
-        f"\n"
-        f"Average Time on Site: {avg_time_on_site} seconds\n"
-        f"Bounce Rate: {avg_bounce_rate}%\n"
-    )
-    
-    return summary, acquisition_summary
+    return summary_df, acquisition_summary
 
