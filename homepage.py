@@ -67,6 +67,7 @@ def main():
     
 
   with col2:
+    st.write("")
     # response = (
     #     lambda: summarize_search_queries(search_data),
     #     """
