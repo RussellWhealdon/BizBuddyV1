@@ -67,9 +67,8 @@ def main():
     acq_col1, acq_col2 = st.columns(2)
     with acq_col1:
       plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
-      describe_top_sources(summarize_monthly_data(ga_data)[1])
     with acq_col2:
-      st.write("")
+      describe_top_sources(summarize_monthly_data(ga_data)[1])
     
 
   with col2:
