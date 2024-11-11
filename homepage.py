@@ -34,22 +34,24 @@ def display_report_with_llm(summary_func, llm_prompt):
 # Run main function
 def main():
 
-    col1, col2, = st.columns(2)
-
-    with col1:
-        st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
-    
-    with col2:
-        search_data = fetch_search_console_data()
-        response = (
-            lambda: summarize_search_queries(search_data),
-            """
-            Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
-            What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
-            concrete tips for improvement. Limit this repsonse to ~ 200 words!
-            """
-        )
-        st.write(summarize_acquisition_sources(acquisiton_data))
+  ga_data = fetch_ga4_extended_data()
+  search_data = fetch_search_console_data()
+  
+  col1, col2, = st.columns(2)
+  
+  with col1:
+    st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
+  
+  with col2:
+    response = (
+        lambda: summarize_search_queries(search_data),
+        """
+        Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
+        What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
+        concrete tips for improvement. Limit this repsonse to ~ 200 words!
+        """
+    )
+    st.write(summarize_acquisition_sources(acquisiton_data))
     
       
 # Execute the main function only when the script is run directly
