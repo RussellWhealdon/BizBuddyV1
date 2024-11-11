@@ -312,29 +312,27 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
 
 import altair as alt
 
-def plot_acquisition_pie_chart_altair(acquisition_summary):
+import plotly.express as px
+import streamlit as st
+
+def plot_acquisition_pie_chart_plotly(acquisition_summary):
     # Filter data for pie chart
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
     source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
     
-    # Create the pie chart
-    pie_chart = alt.Chart(source_data).mark_arc().encode(
-        theta=alt.Theta(field="Visitors", type="quantitative", title=""),
-        color=alt.Color(field="Session Source", type="nominal", legend=None),
-        tooltip=[
-            alt.Tooltip("Session Source", title="Source"),
-            alt.Tooltip("Visitors", title="Visitors", format=",")
-        ]
-    ).properties(
-        title="Traffic Sources Breakdown",
-        width=400,
-        height=400
-    )
-
-    # Add source labels outside the chart
-    text_outside = pie_chart.mark_text(radius=130, size=12).encode(
-        text=alt.Text("Session Source:N")
+    # Create pie chart with Plotly
+    fig = px.pie(
+        source_data,
+        names='Session Source',
+        values='Visitors',
+        title='Traffic Sources Breakdown',
+        hole=0.4,  # Optional: Donut style
+        labels={'Session Source': 'Source', 'Visitors': 'Visitors'}
     )
     
-    # Combine the pie chart and the labels
-    st.altair_chart(pie_chart + text_outside, use_container_width=True)
+    # Update layout to place labels outside
+    fig.update_traces(textposition='outside', textinfo='label+percent', showlegend=False)
+
+    # Display in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
