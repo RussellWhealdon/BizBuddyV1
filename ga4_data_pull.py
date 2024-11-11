@@ -270,10 +270,11 @@ import streamlit as st
 def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
     # List of metrics and their descriptions
     metrics = {
-        "Total Visitors": "number of people that have visited your site.",
-        "New Visitors": "number of people visiting your site for the first time.",
-        "Total Sessions": "number of times people have visited your site this month, including repeat visits.",
-        "Total Leads": "the number of contacts generated this month."
+        "Total Visitors": "the number of people that have visited your site.",
+        "New Visitors": "the number of people visiting your site for the first time this month.",
+        "Total Sessions": "the total number of times people have visited your site this month, including repeat visits.",
+        "Total Leads": "the number of leads generated this month.",
+        "Average Session Duration": "the average amount of time users spent on your site per session."
     }
     
     for metric_name, description in metrics.items():
@@ -293,8 +294,9 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
         
         # Generate the display copy for each metric
         st.markdown(
-            f"**{round(current_value)} {metric_name}** - _{description}_<br>"
+            f"**{round(current_value, 2) if metric_name == 'Average Session Duration' else round(current_value)} {metric_name}** - _{description}_<br>"
             f"<span style='font-size: smaller;'>This is {change_direction} "
             f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
             unsafe_allow_html=True
         )
+
