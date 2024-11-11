@@ -402,7 +402,7 @@ def generate_page_summary(landing_page_summary):
         # Display the page summary
         st.markdown(
             f"**{page_name}**<br>"
-            f"<span style='font-size: smaller;'>Visitors: {visitors} &nbsp;&nbsp;|&nbsp;&nbsp; "
+            f"Visitors: {visitors} &nbsp;&nbsp;|&nbsp;&nbsp; "
             f"Sessions: {sessions} &nbsp;&nbsp;|&nbsp;&nbsp; "
             f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp; "
             f"{conversion_rate}",
