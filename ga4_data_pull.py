@@ -335,9 +335,9 @@ def describe_top_sources(acquisition_summary):
     # Sort by Visitors and take the top 3
     top_sources = acquisition_summary.sort_values(by='Visitors', ascending=False).head(3)
     
-    # Generate description
-    description = "### Top 3 Traffic Sources\n"
+    # Display description with st.markdown
+    st.markdown("### Top 3 Traffic Sources")
     for _, row in top_sources.iterrows():
-        description += f"- **{row['Session Source']}**: {row['Visitors']} visitors\n"
-    
-    return description
+        st.markdown(
+            f"- **{row['Session Source']}**: {row['Visitors']} visitors"
+        )
