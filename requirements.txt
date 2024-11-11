@@ -17,3 +17,6 @@ beautifulsoup4==4.12.3
 
 # For Keyword module
 google-ads==25.1.0
+
+# For plotting
+matplotlib==3.9.2
