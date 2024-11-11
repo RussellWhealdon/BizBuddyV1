@@ -316,35 +316,20 @@ def plot_acquisition_pie_chart_altair(acquisition_summary):
     # Filter data for pie chart
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
     source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
-
-    # Calculate percentages for better labeling
-    source_data['Percentage'] = (source_data['Visitors'] / source_data['Visitors'].sum()) * 100
-
-    # Create the pie chart
-    pie_chart = alt.Chart(source_data).mark_arc(innerRadius=50).encode(
+    
+    # Create a pie chart using Altair
+    pie_chart = alt.Chart(source_data).mark_arc().encode(
         theta=alt.Theta(field="Visitors", type="quantitative", title=""),
         color=alt.Color(field="Session Source", type="nominal", legend=None),
         tooltip=[
             alt.Tooltip("Session Source", title="Source"),
-            alt.Tooltip("Visitors", title="Visitors", format=","),
-            alt.Tooltip("Percentage", title="Percentage", format=".1f")
+            alt.Tooltip("Visitors", title="Visitors", format=",")
         ]
     ).properties(
         title="Traffic Sources Breakdown",
         width=400,
         height=400
     )
-
-    # Add source labels outside the chart
-    text_outside = pie_chart.mark_text(radius=120, size=12).encode(
-        text=alt.Text("Session Source:N")
-    )
-
-    # Add percentage labels inside the slices
-    text_inside = pie_chart.mark_text(radiusOffset=-10, size=10).encode(
-        text=alt.Text("Percentage:Q", format=".1f")
-    )
-
-    st.altair_chart(pie_chart + text_outside + text_inside, use_container_width=True)
-
+    
+    st.altair_chart(pie_chart, use_container_width=True)
 
