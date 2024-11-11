@@ -264,3 +264,27 @@ def summarize_last_month_data(acquisition_data):
     ).reset_index()
     
     return summary_df, acquisition_summary
+
+import streamlit as st
+
+def generate_total_visitors_copy(current_summary_df, last_month_summary_df):
+    # Extract Total Visitors from both summaries
+    current_visitors = current_summary_df.loc[current_summary_df['Metric'] == 'Total Visitors', 'Value'].values[0]
+    last_month_visitors = last_month_summary_df.loc[last_month_summary_df['Metric'] == 'Total Visitors', 'Value'].values[0]
+    
+    # Calculate the percentage change from last month
+    if last_month_visitors > 0:
+        percentage_change = ((current_visitors - last_month_visitors) / last_month_visitors) * 100
+    else:
+        percentage_change = 0  # Avoid division by zero
+    
+    change_direction = "up" if percentage_change > 0 else "down"
+    percentage_change = abs(percentage_change)
+    
+    # Generate the display copy
+    st.markdown(f"**{current_visitors} Total Visitors**")
+    st.markdown(f"This is the number of people that have visited your site.")
+    st.markdown(
+        f"<span style='font-size: smaller;'>This is {change_direction} {percentage_change:.2f}% from last month.</span>", 
+        unsafe_allow_html=True
+    )
