@@ -49,7 +49,7 @@ def main():
             concrete tips for improvement. Limit this repsonse to ~ 200 words!
             """
         )
-        st.write(fetch_ga4_extended_data())
+        st.write(summarize_search_queries(search_data))
     
       
 # Execute the main function only when the script is run directly
