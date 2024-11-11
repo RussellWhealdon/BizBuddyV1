@@ -62,18 +62,7 @@ def main():
     st.markdown("### Insights from AI")
     st.markdown(ga_insights)
 
-    ###landing page analysis section
-    st.divider()
-    st.markdown("### Landing Page Overview")
-    
-    # Generate landing page summary
-    landing_page_summary = summarize_landing_pages(ga_data)[1]
-    
-    # Display the DataFrame for landing page performance
-    generate_page_summary(summarize_landing_pages(ga_data)[1])
-
   
-
   with col2:
     st.markdown("### Acquisition Overview")
     acq_col1, acq_col2 = st.columns(2)
@@ -84,7 +73,21 @@ def main():
       temp_url = "https://www.google.com/"
       st.link_button("Paid Search - Helper", temp_url)
       st.link_button("Social Ads - Helper", temp_url)
-   
+
+  
+  ###landing page analysis section
+  st.divider()
+
+  col3, col4 = st.columns(2)
+  with col3:
+    st.markdown("### Landing Page Overview")
+    
+    # Generate landing page summary
+    landing_page_summary = summarize_landing_pages(ga_data)[1]
+    
+    # Display the DataFrame for landing page performance
+    generate_page_summary(summarize_landing_pages(ga_data)[1])
+ 
     
       
 # Execute the main function only when the script is run directly
