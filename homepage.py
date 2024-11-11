@@ -100,6 +100,10 @@ def main():
     response = query_gpt("Provide insights based on the following page performance data, note that there is no CTAs on any page besides the Home. We need to think of ways to drive more people to the contact page. State only the bullets, no pre text. Limit your response to 2-3 bullet points:", llm_input)
     st.markdown("### Insights from AI")
     st.markdown(response)
+
+  with col4:
+    search_data = fetch_search_console_data()
+    display_search_queries(search_data)
  
     
       
