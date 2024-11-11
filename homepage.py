@@ -62,8 +62,12 @@ def main():
     st.markdown("### Insights from AI")
     st.markdown(ga_insights)
 
+    st.markdown("### Acquisition Overview")
+    plot_acquisition_pie_chart(summarize_monthly_data(ga_data)[1])
+    
+
   with col2:
-    response = (
+    #response = (
         lambda: summarize_search_queries(search_data),
         """
         Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
