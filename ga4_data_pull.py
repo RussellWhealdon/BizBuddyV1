@@ -283,7 +283,7 @@ def generate_total_visitors_copy(current_summary_df, last_month_summary_df):
     color = "green" if change_direction == "up" else "red"  # Green for positive, red for negative
     
     # Generate the display copy
-    st.markdown(f"**{current_visitors} Total Visitors** - This is the number of people that have visited your site.")
+    st.markdown(f"**{current_visitors} Total Visitors** - _the number of people that have visited your site._")
     st.markdown(
         f"<span style='font-size: smaller;'>\nThis is {change_direction} "
         f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
