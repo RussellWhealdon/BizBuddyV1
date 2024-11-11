@@ -80,7 +80,7 @@ def main():
     landing_page_summary = summarize_landing_pages(ga_data)[1]
     
     # Display the DataFrame for landing page performance
-    st.dataframe(landing_page_summary)
+    generate_page_summary(summarize_landing_pages(ga_data)[1])
    
     
       
