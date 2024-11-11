@@ -41,7 +41,7 @@ def main():
   with col1:
     st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
     #st.write(ga_data)
-    generate_total_visitors_copy(summarize_monthly_data(ga_data)[0], summarize_last_month_data(ga_data)[0])
+    generate_all_metrics_copy(summarize_monthly_data(ga_data)[0], summarize_last_month_data(ga_data)[0])
 
   with col2:
     response = (
