@@ -325,12 +325,8 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
         labels={'Session Source': 'Source', 'Visitors': 'Visitors'}
     )
     
-    # Update layout to adjust label positioning and size
+    # Update layout to place labels outside
     fig.update_traces(textposition='outside', textinfo='label+percent', showlegend=False)
-    fig.update_layout(
-        height=500,  # Adjust height here
-        margin=dict(t=50, b=50, l=0, r=0)  # Adjust margins to prevent clipping
-    )
 
     # Display in Streamlit
     st.plotly_chart(fig, use_container_width=True)
