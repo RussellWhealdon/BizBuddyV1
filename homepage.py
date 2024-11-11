@@ -110,7 +110,8 @@ def main():
       st.dataframe(search_data['Search Query'], use_container_width = True)
 
     with sqcol2:
-      st.write("") 
+      seo_insights = generate_seo_insights(search_data)
+      st.markdown(seo_insights) 
  
     
       
