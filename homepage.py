@@ -33,7 +33,11 @@ def display_report_with_llm(summary_func, llm_prompt):
 
 # Run main function
 def main():
-    st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
+
+    col1, col2, = st.columns(2)
+
+    with col1:
+        st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
 
   
 # Execute the main function only when the script is run directly
