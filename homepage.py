@@ -40,7 +40,7 @@ def main():
   
   with col1:
     st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
-  
+    st.writE(ga_data)
   with col2:
     response = (
         lambda: summarize_search_queries(search_data),
