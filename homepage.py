@@ -35,6 +35,8 @@ def main():
 
   ga_data = fetch_ga4_extended_data()
   search_data = fetch_search_console_data()
+  st.write(summarize_monthly_data(ga_data)[0])
+
   
   col1, col2, = st.columns(2)
   
@@ -52,7 +54,6 @@ def main():
         concrete tips for improvement. Limit this repsonse to ~ 200 words!
         """
     )
-    #st.write(summarize_monthly_data(ga_data)[0])
     #st.write(summarize_last_month_data(ga_data)[0])
 
     
