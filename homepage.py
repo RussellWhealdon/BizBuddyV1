@@ -135,7 +135,7 @@ def main():
       seo_insights = generate_seo_insights(search_data)
       st.markdown(seo_insights)
       encoded_message = quote(str(seo_insights))
-      seo_url = f"https://smartmetric-seobuddy.streamlit.app?message={encoded_message}"
+      seo_url = f"https://bizbuddyv1-seobuddy.streamlit.app?message={encoded_message}"
       st.link_button("Check Out our SEO Helper!!", seo_url)
  
     
