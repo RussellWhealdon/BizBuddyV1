@@ -199,7 +199,7 @@ def summarize_monthly_data(acquisition_data):
     
     # Create a summary DataFrame
     summary_df = pd.DataFrame({
-        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Avg. Time on Site (seconds)"],
+        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Average Session Duration"],
         "Value": [total_visitors, new_visitors, total_sessions, total_leads, avg_time_on_site]
     })
     
@@ -232,12 +232,12 @@ def summarize_last_month_data(acquisition_data):
     ]
     
     # Check if required columns are in the dataframe
-    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration", "Session Source"]
+    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Average Session Duration", "Session Source"]
     if not all(col in last_month_data.columns for col in required_cols):
         raise ValueError("Data does not contain required columns.")
     
     # Convert columns to numeric, if possible, and fill NaNs
-    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration"]
+    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Average Session Duration"]
     for col in numeric_cols:
         last_month_data[col] = pd.to_numeric(last_month_data[col], errors='coerce').fillna(0)
     
