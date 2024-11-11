@@ -39,8 +39,7 @@ def main():
     with col1:
         st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
     
-  with col2:
-    
+    with col2:
         search_data = fetch_search_console_data()
         response = display_report_with_llm(
             lambda: summarize_search_queries(search_data),
