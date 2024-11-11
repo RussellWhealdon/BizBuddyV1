@@ -43,6 +43,19 @@ def main():
     st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
     #st.write(ga_data)
     generate_all_metrics_copy(summarize_monthly_data(ga_data)[0], summarize_last_month_data(ga_data)[0])
+    # Use LLM to generate insights based on GA data
+    ga_llm_prompt = """
+    Based on the following website performance metrics, provide a short analysis. Highlight key improvements, areas needing attention, 
+    and how these metrics compare to typical industry standards. Limit your response to 3-4 sentences.
+    """
+        
+        # Combine summaries into data string for LLM
+        metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
+        
+        ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
+        
+        st.markdown("### Insights from AI")
+        st.markdown(ga_insights)
 
   with col2:
     response = (
