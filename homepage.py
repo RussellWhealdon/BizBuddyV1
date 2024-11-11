@@ -63,7 +63,11 @@ def main():
     st.markdown(ga_insights)
 
     st.markdown("### Acquisition Overview")
-    plot_acquisition_pie_chart(summarize_monthly_data(ga_data)[1])
+    acq_col1, acq_col2 = st.columns(2)
+    with acq_col1:
+      plot_acquisition_pie_chart(summarize_monthly_data(ga_data)[1])
+    with acq_col2:
+      st.write("")
     
 
   with col2:
