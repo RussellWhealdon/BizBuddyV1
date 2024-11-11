@@ -71,6 +71,11 @@ def main():
 
   with col2:
     st.write("")
+    # Generate landing page summary
+    landing_page_summary = summarize_landing_pages(ga_data)[1\0]
+    
+    # Display the DataFrame for landing page performance
+    st.dataframe(landing_page_summary)
    
     
       
