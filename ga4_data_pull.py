@@ -4,6 +4,7 @@ import calendar
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
 from google.analytics.data_v1beta.types import RunReportRequest, DateRange, Dimension, Metric
 import streamlit as st
+import matplotlib.pyplot as plt
 
 # Load the secrets for the service account path and property ID
 service_account_info = st.secrets["google_service_account"]
