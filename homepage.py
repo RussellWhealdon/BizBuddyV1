@@ -51,6 +51,8 @@ def main():
         """
     )
     st.write(summarize_monthly_data(ga_data)[0])
+    st.write(summarize_last_month_data(ga_data)[0])
+
     
       
 # Execute the main function only when the script is run directly
