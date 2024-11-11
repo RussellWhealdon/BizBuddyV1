@@ -338,9 +338,19 @@ def describe_top_sources(acquisition_summary):
     
     # Hard-coded descriptions for specific sources
     descriptions = {
-        "Google": "A visitor coming from Google means they found your site through a Google search result, either organic or paid.",
-        "(direct)": "A visitor coming from (direct) means they typed your website URL directly into their browser or came via a bookmarked link.",
-        "manage.wix.com": "A visitor coming from manage.wix.com indicates they were redirected from the Wix site editor, often during testing or setup."
+        "Google": (
+            "A visitor coming from Google means they reached your site through a Google service. "
+            "This could include organic or paid search, a link from Gmail, Google Drive, or even "
+            "Google Ads and other platforms in the Google ecosystem."
+        ),
+        "(direct)": (
+            "A visitor coming from (direct) means they typed your website URL directly into their browser, "
+            "clicked a bookmark, or came from an untracked link like a non-HTTP email or offline document."
+        ),
+        "manage.wix.com": (
+            "A visitor coming from manage.wix.com indicates they were redirected from the Wix site editor, "
+            "often during testing or setup."
+        )
     }
     
     # Display each top source with description
