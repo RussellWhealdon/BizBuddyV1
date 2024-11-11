@@ -70,10 +70,10 @@ def main():
       describe_top_sources(summarize_monthly_data(ga_data)[1])
       temp_url("https://www.google.com/")
       but_col1, but_col2 = st.columns(2)
-        with but_col1:
-          st.link_button("Paid Search - Helper", temp_url)
-        with but_col2:
-          st.link_button("Social Ads - Helper", temp_url)
+      with but_col1:
+        st.link_button("Paid Search - Helper", temp_url)
+      with but_col2:
+        st.link_button("Social Ads - Helper", temp_url)
 
   
 
