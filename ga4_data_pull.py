@@ -329,7 +329,7 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
     fig.update_traces(textposition='outside', textinfo='label+percent', showlegend=False)
 
     # Display in Streamlit
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
 def describe_top_sources(acquisition_summary):
     # Sort by Visitors and take the top 3
