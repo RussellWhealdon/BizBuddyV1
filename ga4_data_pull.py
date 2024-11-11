@@ -396,7 +396,7 @@ def generate_page_summary(landing_page_summary):
         sessions = row["Sessions"]
         avg_session_duration = round(row["Avg_Session_Duration"], 2)
         conversion_rate = (
-            f"Conversion Rate: {row['Conversion Rate (%)']}%" if page_name == "Contact" else ""
+            f"|&nbsp;&nbsp;Conversion Rate: {row['Conversion Rate (%)']}%" if page_name == "Contact" else ""
         )
         
         # Display the page summary
@@ -404,7 +404,7 @@ def generate_page_summary(landing_page_summary):
             f"**{page_name}**<br>"
             f"<span style='font-size: smaller;'>Visitors: {visitors} &nbsp;&nbsp;|&nbsp;&nbsp; "
             f"Sessions: {sessions} &nbsp;&nbsp;|&nbsp;&nbsp; "
-            f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp;|&nbsp;&nbsp; "
+            f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp; "
             f"{conversion_rate}",
             unsafe_allow_html=True
         )
