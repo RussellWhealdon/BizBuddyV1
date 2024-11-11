@@ -211,3 +211,55 @@ def summarize_monthly_data(acquisition_data):
     
     return summary_df, acquisition_summary
 
+def summarize_last_month_data(acquisition_data):
+    # Ensure the Date column is in datetime format, then convert to date
+    if 'Date' not in acquisition_data.columns:
+        raise ValueError("Data does not contain a 'Date' column.")
+    
+    acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce').dt.date
+
+    # Calculate the first and last day of the previous month
+    today = date.today()
+    first_day_of_this_month = today.replace(day=1)
+    last_day_of_last_month = first_day_of_this_month - timedelta(days=1)
+    first_day_of_last_month = last_day_of_last_month.replace(day=1)
+    
+    # Filter data for the previous month
+    last_month_data = acquisition_data[
+        (acquisition_data['Date'] >= first_day_of_last_month) & 
+        (acquisition_data['Date'] <= last_day_of_last_month)
+    ]
+    
+    # Check if required columns are in the dataframe
+    required_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration", "Session Source"]
+    if not all(col in last_month_data.columns for col in required_cols):
+        raise ValueError("Data does not contain required columns.")
+    
+    # Convert columns to numeric, if possible, and fill NaNs
+    numeric_cols = ["Total Visitors", "New Users", "Sessions", "Leads", "Avg. Session Duration"]
+    for col in numeric_cols:
+        last_month_data[col] = pd.to_numeric(last_month_data[col], errors='coerce').fillna(0)
+    
+    # Calculate total metrics for last month
+    total_visitors = last_month_data["Total Visitors"].sum()
+    new_visitors = last_month_data["New Users"].sum()
+    total_sessions = last_month_data["Sessions"].sum()
+    total_leads = last_month_data["Leads"].sum()
+
+    # Calculate average metrics for last month
+    avg_time_on_site = last_month_data["Avg. Session Duration"].mean().round(2)
+    
+    # Create a summary dataframe
+    summary_df = pd.DataFrame({
+        "Metric": ["Total Visitors", "New Visitors", "Total Sessions", "Total Leads", "Average Time on Site"],
+        "Value": [total_visitors, new_visitors, total_sessions, total_leads, avg_time_on_site]
+    })
+
+    # Summarize acquisition metrics
+    acquisition_summary = last_month_data.groupby("Session Source").agg(
+        Visitors=("Total Visitors", "sum"),
+        Sessions=("Sessions", "sum"),
+        Leads=("Leads", "sum")
+    ).reset_index()
+    
+    return summary_df, acquisition_summary
