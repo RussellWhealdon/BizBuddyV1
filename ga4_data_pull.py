@@ -329,4 +329,4 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
     fig.update_traces(textposition='outside', textinfo='label+percent', showlegend=False)
 
     # Display in Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig)
