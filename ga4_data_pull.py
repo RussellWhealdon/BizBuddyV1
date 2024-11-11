@@ -383,8 +383,8 @@ def generate_page_summary(landing_page_summary):
         "/teens-nutrition-counseling": "Teens"
     }
 
-    # Filter the DataFrame to only include the specified pages
-    filtered_summary = landing_page_summary[landing_page_summary["Page Path"].isin(page_name_map.keys())]
+    # Further filter to only include the specified pages
+    filtered_summary = filtered_summary[filtered_summary["Page Path"].isin(page_name_map.keys())]
 
     # Rename Page Path to friendly names
     filtered_summary["Page Name"] = filtered_summary["Page Path"].map(page_name_map)
@@ -405,6 +405,6 @@ def generate_page_summary(landing_page_summary):
             f"<span style='font-size: smaller;'>Visitors: {visitors} &nbsp;&nbsp;|&nbsp;&nbsp; "
             f"Sessions: {sessions} &nbsp;&nbsp;|&nbsp;&nbsp; "
             f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp; "
-            f"{conversion_rate}",
+            f"{conversion_rate}</span>",
             unsafe_allow_html=True
         )
