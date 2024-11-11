@@ -277,7 +277,7 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
         "Average Session Duration": "the average amount of time users spent on your site per session."
     }
     st.markdown(
-    "<span style='font-size:16px;'>📊 Data Overview: Last 30 Days</span>", 
+    "<span style='font-size:25px;'>📊 **Data Overview: Last 30 Days**</span>", 
     unsafe_allow_html=True
     )
     for metric_name, description in metrics.items():
