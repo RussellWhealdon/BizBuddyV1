@@ -398,13 +398,18 @@ def generate_page_summary(landing_page_summary):
         conversion_rate = (
             f"Conversion Rate: {row['Conversion Rate (%)']}%" if page_name == "Contact" else ""
         )
+
+f"<span style='font-size: smaller;'>This is {change_direction} "
+            f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
+            unsafe_allow_html=True
+        )
         
         # Display the page summary
         st.markdown(
             f"**{page_name}**<br>"
-            f"Visitors: {visitors} &nbsp;&nbsp;&nbsp; "
-            f"Sessions: {sessions} &nbsp;&nbsp;&nbsp; "
-            f"Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp;&nbsp; "
-            f"{conversion_rate}",
+            f"<span style='font-size: smaller;'>Visitors: {visitors} &nbsp;&nbsp;|&nbsp;&nbsp; "
+            f"<span style='font-size: smaller;'>Sessions: {sessions} &nbsp;&nbsp;|&nbsp;&nbsp; "
+            f"<span style='font-size: smaller;'>Average Session Duration: {avg_session_duration} seconds &nbsp;&nbsp;|&nbsp;&nbsp; "
+            f"<span style='font-size: smaller;'>{conversion_rate}",
             unsafe_allow_html=True
         )
