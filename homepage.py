@@ -43,6 +43,11 @@ def main():
     st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
     #st.write(ga_data)
     generate_all_metrics_copy(summarize_monthly_data(ga_data)[0], summarize_last_month_data(ga_data)[0])
+    
+    # Generate and display GA4 metrics
+    current_summary = summarize_monthly_data(ga_data)[0]
+    last_month_summary = summarize_last_month_data(ga_data)[0]
+    
     # Use LLM to generate insights based on GA data
     ga_llm_prompt = """
     Based on the following website performance metrics, provide a short analysis. Highlight key improvements, areas needing attention, 
