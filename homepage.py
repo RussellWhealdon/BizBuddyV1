@@ -62,6 +62,10 @@ def main():
     st.markdown("### Insights from AI")
     st.markdown(ga_insights)
 
+    ###landing page analysis section
+    st.divider()
+    st.markdown("### Landing Page Overview")
+    
     # Generate landing page summary
     landing_page_summary = summarize_landing_pages(ga_data)[1]
     
