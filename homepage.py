@@ -51,7 +51,7 @@ def main():
     # Use LLM to generate insights based on GA data
     ga_llm_prompt = """
     Based on the following website performance metrics, provide a short analysis. Highlight key improvements, areas needing attention, 
-    and how these metrics compare to typical industry standards. Limit your response to 2-3 sentences.
+    and how these metrics compare to typical industry standards. Limit your response to 2-3 bullet points.
     """
         
     # Combine summaries into data string for LLM
