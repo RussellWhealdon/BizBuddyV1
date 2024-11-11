@@ -355,7 +355,7 @@ def describe_top_sources(acquisition_summary):
     
     # Display each top source with description
     st.markdown(
-    "<span style='font-size:25px;'>**Top Sources Overview**</span>", 
+    "<span style='font-size:18px;'>**Top Sources Overview**</span>", 
     unsafe_allow_html=True
     )
     for _, row in top_sources.iterrows():
