@@ -57,11 +57,10 @@ def main():
     # Combine summaries into data string for LLM
     metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
     
-    #ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
+    ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
     
     st.markdown("### Insights from AI")
-    #st.markdown(ga_insights)
-    st.write("AI insights......")
+    st.markdown(ga_insights)
 
     st.markdown("### Acquisition Overview")
     acq_col1, acq_col2 = st.columns(2)
