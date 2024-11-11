@@ -310,18 +310,24 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
             unsafe_allow_html=True
         )
 
+import altair as alt
+
 def plot_acquisition_pie_chart_altair(acquisition_summary):
     # Filter data for pie chart
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
     source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
-    
-    # Create a pie chart with labels and tooltips
+
+    # Calculate percentages for better labeling
+    source_data['Percentage'] = (source_data['Visitors'] / source_data['Visitors'].sum()) * 100
+
+    # Create the pie chart
     pie_chart = alt.Chart(source_data).mark_arc(innerRadius=50).encode(
         theta=alt.Theta(field="Visitors", type="quantitative", title=""),
         color=alt.Color(field="Session Source", type="nominal", legend=None),
         tooltip=[
             alt.Tooltip("Session Source", title="Source"),
-            alt.Tooltip("Visitors", title="Visitors", format=",")
+            alt.Tooltip("Visitors", title="Visitors", format=","),
+            alt.Tooltip("Percentage", title="Percentage", format=".1f")
         ]
     ).properties(
         title="Traffic Sources Breakdown",
@@ -329,21 +335,16 @@ def plot_acquisition_pie_chart_altair(acquisition_summary):
         height=400
     )
 
-    # Add labels to show the Session Source and % on each slice
-    text = pie_chart.mark_text(radiusOffset=20).encode(
-        text=alt.Text(
-            field="Session Source",
-            type="nominal",
-            title="Source"
-        )
+    # Add source labels outside the chart
+    text_outside = pie_chart.mark_text(radius=120, size=12).encode(
+        text=alt.Text("Session Source:N")
     )
 
-    percent_text = pie_chart.mark_text(radiusOffset=-40).encode(
-        text=alt.Text(
-            "Visitors:Q",
-            format=".0f"
-        )
+    # Add percentage labels inside the slices
+    text_inside = pie_chart.mark_text(radiusOffset=-10, size=10).encode(
+        text=alt.Text("Percentage:Q", format=".1f")
     )
 
-    st.altair_chart(pie_chart + text + percent_text, use_container_width=True)
+    st.altair_chart(pie_chart + text_outside + text_inside, use_container_width=True)
+
 
