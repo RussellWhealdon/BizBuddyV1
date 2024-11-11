@@ -320,7 +320,7 @@ def plot_acquisition_pie_chart_plotly(acquisition_summary):
         source_data,
         names='Session Source',
         values='Visitors',
-        title='Traffic Sources Breakdown',
+        #title='Traffic Sources Breakdown',
         hole=0.4,  # Optional: Donut style
         labels={'Session Source': 'Source', 'Visitors': 'Visitors'}
     )
@@ -354,7 +354,10 @@ def describe_top_sources(acquisition_summary):
     }
     
     # Display each top source with description
-    st.markdown("### Top Sources Overview")
+    st.markdown(
+    "<span style='font-size:25px;'>**Top Sources Overview**</span>", 
+    unsafe_allow_html=True
+    )
     for _, row in top_sources.iterrows():
         source = row['Session Source']
         visitors = row['Visitors']
