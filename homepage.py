@@ -83,7 +83,8 @@ def main():
     st.markdown("### Landing Page Overview")
     
     # Generate landing page summary
-    landing_page_summary = summarize_landing_pages(ga_data)[1]
+    last_30_days_data = ga_data[ga_data['Date'] >= (pd.Timestamp.now() - pd.Timedelta(days=30))]
+    landing_page_summary = summarize_landing_pages(last_30_days_data)[1]
     
     # Display the DataFrame for landing page performance
     generate_page_summary(summarize_landing_pages(ga_data)[1])
