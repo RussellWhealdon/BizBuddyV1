@@ -54,10 +54,10 @@ def fetch_ga4_extended_data():
         active_users = row.metric_values[0].value
         sessions = row.metric_values[1].value
         pageviews = row.metric_values[2].value
-        bounce_rate = row.metric_values[4].value
-        avg_session_duration = row.metric_values[5].value
-        new_users = row.metric_values[6].value
-        event_count = row.metric_values[7].value
+        bounce_rate = row.metric_values[3].value
+        avg_session_duration = row.metric_values[4].value
+        new_users = row.metric_values[5].value
+        event_count = row.metric_values[6].value
         
         rows.append([
             date, page_path, session_source, campaign_name, source_medium, lp_query, event_name,
