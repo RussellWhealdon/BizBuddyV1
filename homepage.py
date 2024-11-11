@@ -68,7 +68,7 @@ def main():
       plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
     with acq_col2:
       describe_top_sources(summarize_monthly_data(ga_data)[1])
-      temp_url("https://www.google.com/")
+      temp_url = "https://www.google.com/"
       but_col1, but_col2 = st.columns(2)
       with but_col1:
         st.link_button("Paid Search - Helper", temp_url)
