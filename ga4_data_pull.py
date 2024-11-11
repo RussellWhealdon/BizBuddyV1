@@ -315,8 +315,8 @@ def plot_acquisition_pie_chart_altair(acquisition_summary):
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
     source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
     
-    # Create a pie chart using Altair
-    pie_chart = alt.Chart(source_data).mark_arc().encode(
+    # Create a pie chart with labels and tooltips
+    pie_chart = alt.Chart(source_data).mark_arc(innerRadius=50).encode(
         theta=alt.Theta(field="Visitors", type="quantitative", title=""),
         color=alt.Color(field="Session Source", type="nominal", legend=None),
         tooltip=[
@@ -328,6 +328,22 @@ def plot_acquisition_pie_chart_altair(acquisition_summary):
         width=400,
         height=400
     )
-    
-    st.altair_chart(pie_chart, use_container_width=True)
+
+    # Add labels to show the Session Source and % on each slice
+    text = pie_chart.mark_text(radiusOffset=20).encode(
+        text=alt.Text(
+            field="Session Source",
+            type="nominal",
+            title="Source"
+        )
+    )
+
+    percent_text = pie_chart.mark_text(radiusOffset=-40).encode(
+        text=alt.Text(
+            "Visitors:Q",
+            format=".0f"
+        )
+    )
+
+    st.altair_chart(pie_chart + text + percent_text, use_container_width=True)
 
