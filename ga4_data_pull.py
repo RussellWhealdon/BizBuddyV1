@@ -310,21 +310,24 @@ def generate_all_metrics_copy(current_summary_df, last_month_summary_df):
             unsafe_allow_html=True
         )
 
-def plot_acquisition_pie_chart(acquisition_summary):
+def plot_acquisition_pie_chart_altair(acquisition_summary):
     # Filter data for pie chart
     source_data = acquisition_summary[['Session Source', 'Visitors']].copy()
     source_data = source_data[source_data['Visitors'] > 0]  # Exclude sources with no visitors
     
-    # Plot pie chart
-    fig, ax = plt.subplots()
-    ax.pie(
-        source_data['Visitors'],
-        labels=source_data['Session Source'],
-        autopct='%1.1f%%',
-        startangle=90
+    # Create a pie chart using Altair
+    pie_chart = alt.Chart(source_data).mark_arc().encode(
+        theta=alt.Theta(field="Visitors", type="quantitative", title=""),
+        color=alt.Color(field="Session Source", type="nominal", legend=None),
+        tooltip=[
+            alt.Tooltip("Session Source", title="Source"),
+            alt.Tooltip("Visitors", title="Visitors", format=",")
+        ]
+    ).properties(
+        title="Traffic Sources Breakdown",
+        width=400,
+        height=400
     )
-    ax.axis('equal')  # Equal aspect ratio ensures pie chart is circular
-    plt.title('Traffic Sources Breakdown')
     
-    st.pyplot(fig)
+    st.altair_chart(pie_chart, use_container_width=True)
 
