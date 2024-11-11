@@ -57,15 +57,16 @@ def main():
     # Combine summaries into data string for LLM
     metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
     
-    ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
+    #ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
     
     st.markdown("### Insights from AI")
-    st.markdown(ga_insights)
+    #st.markdown(ga_insights)
+    st.write("AI insights......")
 
     st.markdown("### Acquisition Overview")
     acq_col1, acq_col2 = st.columns(2)
     with acq_col1:
-      plot_acquisition_pie_chart_altair(summarize_monthly_data(ga_data)[1])
+      plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
     with acq_col2:
       st.write("")
     
