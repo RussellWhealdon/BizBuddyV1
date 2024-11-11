@@ -15,7 +15,6 @@ st.set_page_config(page_title="BizBuddy", layout="wide", page_icon = "🤓")
                   #'Website Deep Dive': "# This is a header. This is an *extremely* cool app!"})
 
 st.markdown("<h1 style='text-align: center;'>Welcome to your Bizness Buddy</h1>", unsafe_allow_html=True)
-st.markdown("<h2 style='text-align: center;'>Let's take your business to the next level</h2>", unsafe_allow_html=True)
 
 
 # Initialize LLM context with business context on app load
