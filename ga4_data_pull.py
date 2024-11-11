@@ -338,7 +338,7 @@ def describe_top_sources(acquisition_summary):
     
     # Hard-coded descriptions for specific sources
     descriptions = {
-        "Google": (
+        "google": (
             "A visitor coming from Google means they reached your site through a Google service. "
             "This could include organic or paid search, a link from Gmail, Google Drive, or even "
             "Google Ads and other platforms in the Google ecosystem."
