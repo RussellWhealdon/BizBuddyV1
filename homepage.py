@@ -103,7 +103,7 @@ def main():
 
   with col4:
     search_data = fetch_search_console_data()
-    display_search_queries(search_data)
+    st.dataframe(search_data['Search Query'])
  
     
       
