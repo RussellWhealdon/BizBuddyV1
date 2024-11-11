@@ -38,7 +38,9 @@ def main():
 
     with col1:
         st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
-
+    start_date = "2024-01-01"
+    end_date = "2024-11-10"
+    process_ga4_data(fetch_ga4_metrics(st.secrets['property_id'], start_date, end_date))
   
 # Execute the main function only when the script is run directly
 if __name__ == "__main__":
