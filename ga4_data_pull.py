@@ -11,10 +11,9 @@ property_id = st.secrets["google_service_account"]["property_id"]
 # Initialize GA Client using the service account JSON
 client = BetaAnalyticsDataClient.from_service_account_info(service_account_info)
 
-# Get today's date
+# Get todays date
 today = date.today().strftime("%Y-%m-%d")
 
-# Function to fetch GA4 data with all key metrics
 def fetch_ga4_extended_data():
     request = RunReportRequest(
         property=f"properties/{property_id}",
@@ -88,4 +87,83 @@ def fetch_ga4_extended_data():
 
     return df
 
-# Updated summary functions remain the same, ensuring all metrics are grouped and aggregated appropriately.
+# Get summary of acquisition sources
+def summarize_acquisition_sources(acquisition_data):
+    # Check if required columns are in the dataframe
+    required_cols = ["Session Source", "Sessions", "Bounce Rate", "Event Count"]
+    if not all(col in acquisition_data.columns for col in required_cols):
+        raise ValueError("Data does not contain required columns.")
+    
+    # Convert columns to numeric, if possible, and fill NaNs
+    acquisition_data["Sessions"] = pd.to_numeric(acquisition_data["Sessions"], errors='coerce').fillna(0)
+    acquisition_data["Bounce Rate"] = pd.to_numeric(acquisition_data["Bounce Rate"], errors='coerce').fillna(0)
+    acquisition_data["Leads"] = pd.to_numeric(acquisition_data["Leads"], errors='coerce').fillna(0)
+
+    # Group by Session Source to get aggregated metrics
+    source_summary = acquisition_data.groupby("Session Source").agg(
+        Sessions=("Sessions", "sum"),
+        Bounce_Rate=("Bounce Rate", "mean"),
+        Conversions=("Leads", "sum")
+    ).reset_index()
+
+    # Calculate Conversion Rate
+    source_summary["Conversion Rate (%)"] = (source_summary["Conversions"] / source_summary["Sessions"] * 100).round(2)
+
+    # Sort by Sessions in descending order
+    source_summary = source_summary.sort_values(by="Sessions", ascending=False)
+    
+    # Format summary text for LLM
+    summary = "Traffic Source Performance Summary:\n"
+    summary += "Source | Sessions | Avg. Bounce Rate (%) | Conversion Rate (%)\n"
+    summary += "-" * 60 + "\n"
+
+    for _, row in source_summary.iterrows():
+        source = row["Session Source"]
+        sessions = row["Sessions"]
+        bounce_rate = round(row["Bounce_Rate"], 2)
+        conversion_rate = row["Conversion Rate (%)"]
+        
+        summary += f"{source} | {sessions} | {bounce_rate}% | {conversion_rate}%,\n"
+
+    return summary, source_summary
+
+
+# Summarize landing pages
+def summarize_landing_pages(acquisition_data):
+    # Check if required columns are in the dataframe
+    required_cols = ["Page Path", "Sessions", "Bounce Rate", "Leads"]
+    if not all(col in acquisition_data.columns for col in required_cols):
+        raise ValueError("Data does not contain required columns.")
+    
+    # Convert columns to numeric, if possible, and fill NaNs
+    acquisition_data["Sessions"] = pd.to_numeric(acquisition_data["Sessions"], errors='coerce').fillna(0)
+    acquisition_data["Bounce Rate"] = pd.to_numeric(acquisition_data["Bounce Rate"], errors='coerce').fillna(0)
+    acquisition_data["Leads"] = pd.to_numeric(acquisition_data["Leads"], errors='coerce').fillna(0)
+
+    # Group by Page Path to get aggregated metrics
+    page_summary = acquisition_data.groupby("Page Path").agg(
+        Sessions=("Sessions", "sum"),
+        Bounce_Rate=("Bounce Rate", "mean"),
+        Conversions=("Leads", "sum")  # Use Leads for conversions
+    ).reset_index()
+
+    # Calculate Conversion Rate
+    page_summary["Conversion Rate (%)"] = (page_summary["Conversions"] / page_summary["Sessions"] * 100).round(2)
+
+    # Sort by Sessions in descending order
+    page_summary = page_summary.sort_values(by="Sessions", ascending=False)
+    
+    # Format summary text for LLM
+    summary = "Landing Page Performance Summary:\n"
+    summary += "Page Path | Sessions | Avg. Bounce Rate (%) | Conversion Rate (%)\n"
+    summary += "-" * 70 + "\n"
+
+    for _, row in page_summary.iterrows():
+        page_path = row["Page Path"]
+        sessions = row["Sessions"]
+        bounce_rate = round(row["Bounce_Rate"], 2)
+        conversion_rate = row["Conversion Rate (%)"]
+        
+        summary += f"{page_path} | {sessions} | {bounce_rate}% | {conversion_rate}%,\n"
+
+    return summary, page_summary
