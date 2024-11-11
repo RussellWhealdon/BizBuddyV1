@@ -17,14 +17,6 @@ st.set_page_config(page_title="BizBuddy", layout="wide", page_icon = "🤓")
 st.markdown("<h1 style='text-align: center;'>Welcome to your Bizness Buddy</h1>", unsafe_allow_html=True)
 st.markdown("<h2 style='text-align: center;'>Let's take your business to the next level</h2>", unsafe_allow_html=True)
 
-response = display_report_with_llm(
-            lambda: summarize_search_queries(search_data),
-            """
-            Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
-            What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
-            concrete tips for improvement. Limit this repsonse to ~ 200 words!
-            """
-        )
 
 # Initialize LLM context with business context on app load
 initialize_llm_context()
@@ -46,6 +38,18 @@ def main():
 
     with col1:
         st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
+    
+  with col2:
+    
+        search_data = fetch_search_console_data()
+        response = display_report_with_llm(
+            lambda: summarize_search_queries(search_data),
+            """
+            Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
+            What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
+            concrete tips for improvement. Limit this repsonse to ~ 200 words!
+            """
+        )
       
 # Execute the main function only when the script is run directly
 if __name__ == "__main__":
