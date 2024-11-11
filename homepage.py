@@ -12,7 +12,7 @@ st.set_page_config(page_title="BizBuddy", layout="wide", page_icon = "🤓",
                   menu_items={
                   'SEO Analysis': 'https://www.extremelycoolapp.com/help',
                   'Paid Search Planner': "https://www.extremelycoolapp.com/bug",
-                  'Website Deep Dive': "# This is a header. This is an *extremely* cool app!"
+                  'Website Deep Dive': "# This is a header. This is an *extremely* cool app!"}
                   )
 
 st.markdown("<h1 style='text-align: center;'>Welcome to your Bizness Buddy</h1>", unsafe_allow_html=True)
