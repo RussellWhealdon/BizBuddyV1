@@ -398,11 +398,6 @@ def generate_page_summary(landing_page_summary):
         conversion_rate = (
             f"Conversion Rate: {row['Conversion Rate (%)']}%" if page_name == "Contact" else ""
         )
-
-f"<span style='font-size: smaller;'>This is {change_direction} "
-            f"<span style='color:{color};'>{percentage_change:.2f}%</span> from last month.</span>", 
-            unsafe_allow_html=True
-        )
         
         # Display the page summary
         st.markdown(
