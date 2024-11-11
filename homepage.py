@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 import pandas as pd
 from datetime import date
-from ga4_data_pull import fetch_ga4_metrics, process_ga4_metrics
+from ga4_data_pull import fetch_ga4_metrics, process_ga4_data
 from gsc_data_pull import fetch_search_console_data, summarize_search_queries
 from llm_integration import initialize_llm_context, query_gpt
 from urllib.parse import quote
