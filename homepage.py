@@ -95,6 +95,10 @@ def main():
     
     # Display the DataFrame for landing page performance
     generate_page_summary(landing_page_summary)
+
+    llm_input = st.session_state.get("page_summary_llm", "")
+    response = query_gpt("Provide insights based on the following page performance data, note that there is no CTAs on any page besides the Home. We need to think of ways to drive more people to the contact page:", llm_input)
+    st.markdown(f"### LLM Analysis\n{response}")
  
     
       
