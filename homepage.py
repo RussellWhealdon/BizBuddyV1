@@ -67,14 +67,14 @@ def main():
     
 
   with col2:
-    #response = (
-        lambda: summarize_search_queries(search_data),
-        """
-        Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
-        What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
-        concrete tips for improvement. Limit this repsonse to ~ 200 words!
-        """
-    )
+    # response = (
+    #     lambda: summarize_search_queries(search_data),
+    #     """
+    #     Based on this Search Query Report from Google give tips as to possible Paid Search Strategy and SEO optimization. Try to best answer the question, 
+    #     What are people searching for when they come to my site and how can I get more of these users? Give me a brief analysis then 4 bullet points with 
+    #     concrete tips for improvement. Limit this repsonse to ~ 200 words!
+    #     """
+    # )
     #st.write(summarize_last_month_data(ga_data)[0])
 
     
