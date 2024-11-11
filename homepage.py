@@ -91,7 +91,7 @@ def main():
       describe_top_sources(summarize_monthly_data(ga_data)[1])
       temp_url = "https://www.google.com/"
 
-    st.markdown("Search and social ads are key to driving traffic, helping businesses reach people actively searching or discovering new products on social platforms.")
+    st.markdown("Search and social ads are key to driving traffic, helping businesses reach people actively searching or discovering new products on social platforms. Check out these tools to help you get going.")
     #Button links
     st.link_button("Paid Search - Helper", temp_url)
     st.link_button("Social Ads - Helper", temp_url)
