@@ -82,8 +82,15 @@ def main():
   with col3:
     st.markdown("### Landing Page Overview")
     
-    # Generate landing page summary
-    last_30_days_data = ga_data[ga_data['Date'] >= (pd.Timestamp.now() - pd.Timedelta(days=30))]
+    # Ensure the 'Date' column is in the correct format
+    ga_data['Date'] = pd.to_datetime(ga_data['Date'], errors='coerce').dt.date
+
+    # Get the date 30 days ago
+    today = date.today()
+    start_of_period = today - timedelta(days=30)
+
+    # Filter data for the last 30 days
+    last_30_days_data = ga_data[ga_data['Date'] >= start_of_period]
     landing_page_summary = summarize_landing_pages(last_30_days_data)[1]
     
     # Display the DataFrame for landing page performance
