@@ -67,22 +67,11 @@ if st.button("Start Crawl"):
         crawl_results = crawl_website(base_url, max_pages)
         
         if crawl_results:
-            df = pd.DataFrame(crawl_results)
+            df = pd.DataFrame(crawl_results, use_container_width = True)
             st.write("### Crawl Results", df)
             st.download_button("Download CSV", df.to_csv(index=False), file_name="crawl_results.csv")
         else:
             st.warning("No data found. Please check the URL or try a different site.")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
