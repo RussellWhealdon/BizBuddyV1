@@ -8,7 +8,7 @@ import pandas as pd
 def fetch_page(url):
     try:
         response = requests.get(url, timeout=10)
-        response.raise_for_status()  # Raise an error for bad responses (4xx or 5xx)
+        response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         return soup
     except requests.exceptions.RequestException as e:
@@ -25,12 +25,30 @@ def extract_links(base_url, soup):
             links.add(full_url.split('#')[0])  # Remove fragment identifiers
     return links
 
-# Function to extract metadata
+# Expanded metadata extraction
 def extract_metadata(url, soup):
     title = soup.title.string if soup.title else "No Title"
+    
+    # Meta description
     meta_desc = soup.find('meta', attrs={'name': 'description'})
     description = meta_desc['content'] if meta_desc else "No Meta Description"
-    return {"URL": url, "Title": title, "Meta Description": description}
+    
+    # Canonical tag
+    canonical_tag = soup.find('link', rel='canonical')
+    canonical = canonical_tag['href'] if canonical_tag else "No Canonical URL"
+    
+    # Headers (H1, H2)
+    h1 = [h1_tag.get_text(strip=True) for h1_tag in soup.find_all('h1')]
+    h2 = [h2_tag.get_text(strip=True) for h2_tag in soup.find_all('h2')]
+    
+    return {
+        "URL": url,
+        "Title": title,
+        "Meta Description": description,
+        "Canonical URL": canonical,
+        "H1 Tags": ", ".join(h1) if h1 else "No H1 Tags",
+        "H2 Tags": ", ".join(h2) if h2 else "No H2 Tags"
+    }
 
 # Recursive function to crawl pages
 def crawl_website(base_url, max_pages=10):
@@ -45,7 +63,7 @@ def crawl_website(base_url, max_pages=10):
         
         soup = fetch_page(url)
         if soup:
-            # Extract metadata and links
+            # Extract expanded metadata and links
             metadata = extract_metadata(url, soup)
             results.append(metadata)
             new_links = extract_links(base_url, soup)
@@ -56,7 +74,7 @@ def crawl_website(base_url, max_pages=10):
     return results
 
 # Streamlit UI
-st.title("Website Audit Tool - Crawl and Metadata Extractor")
+st.title("Website Audit Tool - Expanded Metadata Extraction")
 
 base_url = st.text_input("Enter the website URL:", "https://example.com")
 max_pages = st.slider("Max pages to crawl:", 1, 50, 10)
@@ -68,11 +86,11 @@ if st.button("Start Crawl"):
         
         if crawl_results:
             df = pd.DataFrame(crawl_results)
-            st.write("### Crawl Results")
-            st.dataframe(df, use_container_width = True)
-            st.download_button("Download CSV", df.to_csv(index=False), file_name="crawl_results.csv")
+            st.write("### Crawl Results", df)
+            st.download_button("Download CSV", df.to_csv(index=False), file_name="expanded_crawl_results.csv")
         else:
             st.warning("No data found. Please check the URL or try a different site.")
+
 
 
 
