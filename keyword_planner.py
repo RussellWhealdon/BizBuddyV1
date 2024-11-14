@@ -33,6 +33,7 @@ def display_sidebar():
         """
         1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
         2. Use the search box to filter the data for specific keywords.
+        3. Select 5 keywords that directly impact your business and submit them.
         """
     )
 
@@ -66,6 +67,21 @@ def main():
     st.subheader("Keyword Data")
     with st.expander("View Keyword Data", expanded=True):
         st.dataframe(filtered_df, use_container_width=True)
+
+    # Keyword Selection
+    st.subheader("Select 5 Keywords That Impact Your Business")
+    selected_keywords = []
+    for i in range(5):
+        keyword = st.text_input(f"Keyword {i+1}")
+        if keyword:
+            selected_keywords.append(keyword)
+
+    if st.button("Submit Keywords"):
+        if len(selected_keywords) < 5:
+            st.error("Please enter all 5 keywords before submitting.")
+        else:
+            st.success("You have successfully submitted your keywords!")
+            st.write("Selected Keywords:", selected_keywords)
 
     # Sidebar
     display_sidebar()
