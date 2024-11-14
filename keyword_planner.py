@@ -1,40 +1,39 @@
 import streamlit as st
 from gaw_data_pull import fetch_keyword_data
 
+import streamlit as st
+import pandas as pd
+
 # Streamlit App Title
 st.title("Google Ads Keyword Planner")
 
-# Input Fields
-st.subheader("Enter Details for Keyword Ideas:")
-page_url = st.text_input("Website URL", value="https://example.com")
-customer_id = "6318131495"
-location_ids = ["1014044"]  # Seattle, WA
-language_id = "1000"  # English
+# Load Keyword Data from File
+st.subheader("Keyword Data")
+uploaded_file = "KeywordStats_Washington_CWN.csv"  # File name
 
-# Fetch Button
-if st.button("Fetch Keyword Data"):
-    with st.spinner("Fetching keyword data..."):
-        df = fetch_keyword_data(customer_id, location_ids, language_id, page_url)
-        if not df.empty:
-            st.success("Data fetched successfully!")
-            st.dataframe(df)
-        else:
-            st.warning("No data returned. Please check your inputs or API setup.")
+# Read and display the file
+try:
+    df = pd.read_csv(uploaded_file)
+    with st.expander("View Keyword Data", expanded=True):
+        st.dataframe(df, use_container_width=True)
+except FileNotFoundError:
+    st.error(f"File '{uploaded_file}' not found. Please check the file name or location.")
+except Exception as e:
+    st.error(f"An error occurred: {e}")
 
-# Instructions for Use
+# Sidebar Instructions
 st.sidebar.header("Instructions")
 st.sidebar.write(
     """
-    1. Enter your **Customer ID** (Test Account only).
-    2. Provide a valid **Website URL**.
-    3. Click **Fetch Keyword Data** to see keyword suggestions.
+    1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
+    2. View the data in the main panel under **Keyword Data**.
     """
 )
 
 st.sidebar.subheader("Notes:")
 st.sidebar.write(
     """
-    - Data is sourced from the Google Ads Keyword Planner API.
-    - Ensure your `secrets.toml` contains valid credentials.
+    - Ensure the CSV file is in the correct location.
+    - The data is pre-fetched and no API calls are made in this module.
     """
 )
