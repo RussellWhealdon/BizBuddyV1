@@ -89,7 +89,7 @@ def main():
       plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
     with acq_col2:
       describe_top_sources(summarize_monthly_data(ga_data)[1])
-      temp_url = "https://www.google.com/"
+      temp_url = "https://bizbuddyv1-ppcbuddy.streamlit.app/"
 
     st.markdown("Search and social ads are key to driving traffic, helping businesses reach people actively searching or discovering new products on social platforms. Check out these tools to help you get going.")
     #Button links
