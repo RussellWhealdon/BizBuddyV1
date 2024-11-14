@@ -17,7 +17,7 @@ uploaded_file = "KeywordStats_Washington_CWN.csv"  # File name
 
 # Read and display the file
 try:
-    df = pd.read_csv(uploaded_file)
+    df = pd.read_csv(uploaded_file, skiprows=2)  # Skip the first two rows
     with st.expander("View Keyword Data", expanded=True):
         st.dataframe(df, use_container_width=True)
 except FileNotFoundError:
