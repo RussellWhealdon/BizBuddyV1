@@ -1,16 +1,14 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-import nltk
-from nltk.corpus import stopwords
-from collections import Counter
 import pandas as pd
-
-# Ensure necessary NLTK data is downloaded
-nltk.download('punkt')
-nltk.download('stopwords')
+import re
+from collections import Counter
 
 def fetch_website_content(url):
+    """
+    Fetch content from the given URL.
+    """
     response = requests.get(url)
     if response.status_code == 200:
         return response.text
@@ -18,17 +16,71 @@ def fetch_website_content(url):
         st.error(f"Failed to fetch content from {url}")
         return ""
 
-def extract_keywords(text, num_keywords=6):
-    # Tokenize the text
-    words = nltk.word_tokenize(text.lower())
-    # Remove stopwords and non-alphabetic tokens
-    words = [word for word in words if word.isalpha() and word not in stopwords.words('english')]
+def clean_and_extract_keywords(text, num_keywords=6):
+    """
+    Clean text and extract the most common keywords.
+    """
+    # Remove special characters and split into words
+    words = re.findall(r'\b\w+\b', text.lower())
+    
+    # Define a simple list of stopwords
+    stopwords = set(["the", "and", "is", "in", "to", "for", "on", "with", "at", "by", "of", "a", "an", "as", "it", "or", "be", "that", "this", "from", "you", "your"])
+    
+    # Filter out stopwords
+    filtered_words = [word for word in words if word not in stopwords and len(word) > 2]
+    
     # Get the most common words
-    freq_dist = Counter(words)
+    freq_dist = Counter(filtered_words)
     common_words = freq_dist.most_common(num_keywords)
     return [word for word, _ in common_words]
 
+def load_data(file_path):
+    """
+    Load keyword data from a CSV file, skipping the first two rows.
+    """
+    try:
+        df = pd.read_csv(file_path, skiprows=2)  # Skip the first two rows
+        return df
+    except FileNotFoundError:
+        st.error(f"File '{file_path}' not found. Please check the file name or location.")
+        return pd.DataFrame()  # Return an empty DataFrame if file is not found
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return pd.DataFrame()
+
+def filter_data(df, query):
+    """
+    Filter the dataframe based on a search query.
+    """
+    if query:
+        return df[df.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
+    return df
+
+def display_sidebar():
+    """
+    Display sidebar instructions and notes.
+    """
+    st.sidebar.header("Instructions")
+    st.sidebar.write(
+        """
+        1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
+        2. Use the search box to filter the data for specific keywords.
+        3. Select 5 keywords that directly impact your business and submit them.
+        """
+    )
+
+    st.sidebar.subheader("Notes:")
+    st.sidebar.write(
+        """
+        - Ensure the CSV file is in the correct location.
+        - The data is pre-fetched and no API calls are made in this module.
+        """
+    )
+
 def main():
+    """
+    Main function to run the Streamlit app.
+    """
     st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
     st.title("Google Ads Keyword Planner")
 
@@ -39,28 +91,23 @@ def main():
     if html_content:
         soup = BeautifulSoup(html_content, 'html.parser')
         text = soup.get_text()
-        keywords = extract_keywords(text)
+        keywords = clean_and_extract_keywords(text)
         st.write(", ".join(keywords))
 
     # Load and display keyword data
     st.subheader("What People Are Searching for Related to Your Website")
     uploaded_file = "KeywordStats_Washington_CWN.csv"
     try:
-        df = pd.read_csv(uploaded_file, skiprows=2)
+        df = load_data(uploaded_file)
         search_query = st.text_input("Search for Keywords:", value="")
-        if search_query:
-            filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_query, case=False).any(), axis=1)]
-        else:
-            filtered_df = df
+        filtered_df = filter_data(df, search_query)
         with st.expander("View Keyword Data", expanded=True):
             st.dataframe(filtered_df, use_container_width=True)
-    except FileNotFoundError:
-        st.error(f"File '{uploaded_file}' not found. Please check the file name or location.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
     # Keyword selection and PPC plan generation
-    st.subheader("Select 5 Keywords That Have Search Volume and Are Directly Related to Your Business/Website.")
+    st.subheader("Select 5 keywords that have search volume and are directly related to your business/website.")
     selected_keywords = []
     for i in range(5):
         keyword = st.text_input(f"Keyword {i+1}")
@@ -77,21 +124,8 @@ def main():
             st.write("PPC plan generation functionality goes here.")
 
     # Sidebar instructions
-    st.sidebar.header("Instructions")
-    st.sidebar.write(
-        """
-        1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
-        2. Use the search box to filter the data for specific keywords.
-        3. Select 5 keywords that directly impact your business and submit them.
-        """
-    )
-    st.sidebar.subheader("Notes:")
-    st.sidebar.write(
-        """
-        - Ensure the CSV file is in the correct location.
-        - The data is pre-fetched and no API calls are made in this module.
-        """
-    )
+    display_sidebar()
 
 if __name__ == "__main__":
     main()
+
