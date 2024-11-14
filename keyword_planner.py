@@ -4,6 +4,10 @@ from gaw_data_pull import fetch_keyword_data
 import streamlit as st
 import pandas as pd
 
+# Set Streamlit page configuration
+st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
+
+
 # Streamlit App Title
 st.title("Google Ads Keyword Planner")
 
