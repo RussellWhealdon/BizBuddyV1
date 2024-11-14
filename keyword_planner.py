@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from llm_integration import query_gpt  # Importing for future use
+from llm_integration import query_gpt  # Importing for GPT functionality
 
 def load_data(file_path):
     """
@@ -45,6 +45,17 @@ def display_sidebar():
         """
     )
 
+def generate_ppc_plan(keywords):
+    """
+    Generate a PPC plan using GPT based on the selected keywords.
+    """
+    prompt = (
+        "You are an expert PPC marketer. Using the following 5 keywords, create a PPC plan. "
+        "Include match type recommendations, conversion types, business context, and some example ad copy for each keyword.\n\n"
+        f"Keywords: {', '.join(keywords)}"
+    )
+    return query_gpt(prompt)
+
 def main():
     """
     Main function to run the Streamlit app.
@@ -69,7 +80,7 @@ def main():
         st.dataframe(filtered_df, use_container_width=True)
 
     # Keyword Selection
-    st.subheader("Select 5 Keywords that have search volume and are directly related to your business/website.")
+    st.subheader("Select 5 keywords that have search volume and are directly related to your business/website.")
     selected_keywords = []
     for i in range(5):
         keyword = st.text_input(f"Keyword {i+1}")
@@ -82,6 +93,12 @@ def main():
         else:
             st.success("You have successfully submitted your keywords!")
             st.write("Selected Keywords:", selected_keywords)
+
+            # Generate PPC Plan
+            with st.spinner("Generating PPC Plan..."):
+                ppc_plan = generate_ppc_plan(selected_keywords)
+                st.subheader("Generated PPC Plan")
+                st.write(ppc_plan)
 
     # Sidebar
     display_sidebar()
