@@ -60,6 +60,10 @@ def main():
     """
     Main function to run the Streamlit app.
     """
+    # Initialize session state for session_summary
+    if "session_summary" not in st.session_state:
+        st.session_state["session_summary"] = ""
+
     # Set page configuration
     st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
 
@@ -97,6 +101,7 @@ def main():
             # Generate PPC Plan
             with st.spinner("Generating PPC Plan..."):
                 ppc_plan = generate_ppc_plan(selected_keywords)
+                st.session_state["session_summary"] = ppc_plan  # Save the plan to session state
                 st.subheader("Generated PPC Plan")
                 st.write(ppc_plan)
 
