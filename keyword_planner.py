@@ -1,51 +1,75 @@
 import streamlit as st
-from gaw_data_pull import fetch_keyword_data
-import streamlit as st
 import pandas as pd
-from llm_integration import query_gpt  # Importing for potential future use
+from llm_integration import query_gpt  # Importing for future use
 
-# Set Streamlit page configuration
-st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
+def load_data(file_path):
+    """
+    Load keyword data from a CSV file, skipping the first two rows.
+    """
+    try:
+        df = pd.read_csv(file_path, skiprows=2)  # Skip the first two rows
+        return df
+    except FileNotFoundError:
+        st.error(f"File '{file_path}' not found. Please check the file name or location.")
+        return pd.DataFrame()  # Return an empty DataFrame if file is not found
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return pd.DataFrame()
 
-# Streamlit App Title
-st.title("Google Ads Keyword Planner")
+def filter_data(df, query):
+    """
+    Filter the dataframe based on a search query.
+    """
+    if query:
+        return df[df.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
+    return df
 
-# Load Keyword Data from File
-st.subheader("Keyword Data")
-uploaded_file = "KeywordStats_Washington_CWN.csv"  # File name
+def display_sidebar():
+    """
+    Display sidebar instructions and notes.
+    """
+    st.sidebar.header("Instructions")
+    st.sidebar.write(
+        """
+        1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
+        2. Use the search box to filter the data for specific keywords.
+        """
+    )
 
-# Read and display the file
-try:
-    df = pd.read_csv(uploaded_file, skiprows=2)  # Skip the first two rows
+    st.sidebar.subheader("Notes:")
+    st.sidebar.write(
+        """
+        - Ensure the CSV file is in the correct location.
+        - The data is pre-fetched and no API calls are made in this module.
+        """
+    )
 
-    # Search Functionality
+def main():
+    """
+    Main function to run the Streamlit app.
+    """
+    # Set page configuration
+    st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
+
+    # App title
+    st.title("Google Ads Keyword Planner")
+
+    # Load data
+    uploaded_file = "KeywordStats_Washington_CWN.csv"
+    df = load_data(uploaded_file)
+
+    # Search functionality
     search_query = st.text_input("Search for Keywords:", value="")
-    if search_query:
-        filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_query, case=False).any(), axis=1)]
-    else:
-        filtered_df = df
+    filtered_df = filter_data(df, search_query)
 
+    # Display data
+    st.subheader("Keyword Data")
     with st.expander("View Keyword Data", expanded=True):
         st.dataframe(filtered_df, use_container_width=True)
 
-except FileNotFoundError:
-    st.error(f"File '{uploaded_file}' not found. Please check the file name or location.")
-except Exception as e:
-    st.error(f"An error occurred: {e}")
+    # Sidebar
+    display_sidebar()
 
-# Sidebar Instructions
-st.sidebar.header("Instructions")
-st.sidebar.write(
-    """
-    1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
-    2. Use the search box to filter the data for specific keywords.
-    """
-)
-
-st.sidebar.subheader("Notes:")
-st.sidebar.write(
-    """
-    - Ensure the CSV file is in the correct location.
-    - The data is pre-fetched and no API calls are made in this module.
-    """
-)
+# Run the main function
+if __name__ == "__main__":
+    main()
