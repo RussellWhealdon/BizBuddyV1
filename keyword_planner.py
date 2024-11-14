@@ -69,7 +69,7 @@ def main():
         st.dataframe(filtered_df, use_container_width=True)
 
     # Keyword Selection
-    st.subheader("Select 5 Keywords That Impact Your Business")
+    st.subheader("Select 5 Keywords That have search volume and are directly related to your business/website.")
     selected_keywords = []
     for i in range(5):
         keyword = st.text_input(f"Keyword {i+1}")
