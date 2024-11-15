@@ -63,26 +63,6 @@ def filter_data(df, query):
         return df[df.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
     return df
 
-def display_sidebar():
-    """
-    Display sidebar instructions and notes.
-    """
-    st.sidebar.header("Instructions")
-    st.sidebar.write(
-        """
-        1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
-        2. Use the search box to filter the data for specific keywords.
-        3. Select 5 keywords that directly impact your business and submit them.
-        """
-    )
-
-    st.sidebar.subheader("Notes:")
-    st.sidebar.write(
-        """
-        - Ensure the CSV file is in the correct location.
-        - The data is pre-fetched and no API calls are made in this module.
-        """
-    )
 
 def generate_ppc_plan(keywords):
     """
@@ -144,8 +124,6 @@ def main():
                 st.subheader("Generated PPC Plan")
                 st.write(ppc_plan)
 
-    # Sidebar instructions
-    display_sidebar()
 
 if __name__ == "__main__":
     main()
