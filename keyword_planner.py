@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from collections import Counter
+from llm_integration import query_gpt  # Importing for GPT functionality
+import nltk
+from nltk.corpus import stopwords
+
+# Ensure necessary NLTK data is downloaded
+nltk.download('stopwords')
 
 def fetch_website_content(url):
     """
@@ -20,14 +26,13 @@ def clean_and_extract_keywords(text, num_keywords=6):
     """
     Clean text and extract the most common keywords.
     """
-    # Remove special characters and split into words
     words = re.findall(r'\b\w+\b', text.lower())
     
-    # Define a simple list of stopwords
-    stopwords = set(["the", "and", "is", "in", "to", "for", "on", "with", "at", "by", "of", "a", "an", "as", "it", "or", "be", "that", "this", "from", "you", "your"])
+    # Use NLTK's stopwords
+    stop_words = set(stopwords.words('english'))
     
     # Filter out stopwords
-    filtered_words = [word for word in words if word not in stopwords and len(word) > 2]
+    filtered_words = [word for word in words if word not in stop_words and len(word) > 2]
     
     # Get the most common words
     freq_dist = Counter(filtered_words)
@@ -43,7 +48,7 @@ def load_data(file_path):
         return df
     except FileNotFoundError:
         st.error(f"File '{file_path}' not found. Please check the file name or location.")
-        return pd.DataFrame()  # Return an empty DataFrame if file is not found
+        return pd.DataFrame()
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return pd.DataFrame()
@@ -76,6 +81,17 @@ def display_sidebar():
         - The data is pre-fetched and no API calls are made in this module.
         """
     )
+
+def generate_ppc_plan(keywords):
+    """
+    Generate a PPC plan using GPT based on the selected keywords.
+    """
+    prompt = (
+        "You are an expert PPC marketer. Using the following 5 keywords, create a PPC plan. "
+        "Include match type recommendations, conversion types, business context, and some example ad copy for each keyword.\n\n"
+        f"Keywords: {', '.join(keywords)}"
+    )
+    return query_gpt(prompt)
 
 def main():
     """
@@ -120,12 +136,15 @@ def main():
         else:
             st.success("You have successfully submitted your keywords!")
             st.write("Selected Keywords:", selected_keywords)
-            # Placeholder for PPC plan generation
-            st.write("PPC plan generation functionality goes here.")
+
+            # Generate PPC Plan
+            with st.spinner("Generating PPC Plan..."):
+                ppc_plan = generate_ppc_plan(selected_keywords)
+                st.subheader("Generated PPC Plan")
+                st.write(ppc_plan)
 
     # Sidebar instructions
     display_sidebar()
 
 if __name__ == "__main__":
     main()
-
