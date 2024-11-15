@@ -99,7 +99,6 @@ def main():
     """
     Main function to run the Streamlit app.
     """
-    st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
     st.title("Google Ads Keyword Planner")
 
     # Fetch and display keyword suggestions
