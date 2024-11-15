@@ -8,6 +8,8 @@ from llm_integration import query_gpt  # Importing for GPT functionality
 import nltk
 from nltk.corpus import stopwords
 
+st.set_page_config(page_title="KeywordBuddy", layout="wide", page_icon = "🔎")
+
 # Ensure necessary NLTK data is downloaded
 nltk.download('stopwords')
 
