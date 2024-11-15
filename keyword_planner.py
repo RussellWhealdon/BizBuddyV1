@@ -66,7 +66,7 @@ def generate_ppc_plan(keywords):
     Generate a PPC plan using GPT based on the selected keywords.
     """
     prompt = (
-        ""You are an expert PPC marketer tasked with creating a PPC plan using the following 5 keywords. The budget for this campaign is small, and all keywords will be managed within a single campaign to maximize efficiency. Provide a detailed plan that includes: Match type recommendations for balancing reach and cost control. Conversion types that align with the business goals. Business context to ensure the campaign targets the right audience and objectives. Example ad copy tailored to each keyword, designed to maximize engagement and drive conversions. Keep the plan cost-effective, and focus on strategies to maximize ROI within a limited budget."\n\n"
+        "You are an expert PPC marketer tasked with creating a PPC plan using the following 5 keywords. The budget for this campaign is small, and all keywords will be managed within a single campaign to maximize efficiency. Provide a detailed plan that includes: Match type recommendations for balancing reach and cost control. Conversion types that align with the business goals. Business context to ensure the campaign targets the right audience and objectives. Example ad copy tailored to each keyword, designed to maximize engagement and drive conversions. Keep the plan cost-effective, and focus on strategies to maximize ROI within a limited budget.\n\n"
         f"Keywords: {', '.join(keywords)}"
     )
     return query_gpt(prompt)
