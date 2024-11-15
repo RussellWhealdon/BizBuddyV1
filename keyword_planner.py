@@ -4,11 +4,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 from collections import Counter
-from llm_integration import query_gpt  # Importing for GPT functionality
+from llm_integration import query_gpt, initialize_llm_context  # Import GPT and initialization functions
 import nltk
 from nltk.corpus import stopwords
-
-st.set_page_config(page_title="KeywordBuddy", layout="wide", page_icon = "🔎")
 
 # Ensure necessary NLTK data is downloaded
 nltk.download('stopwords')
@@ -63,7 +61,6 @@ def filter_data(df, query):
         return df[df.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
     return df
 
-
 def generate_ppc_plan(keywords):
     """
     Generate a PPC plan using GPT based on the selected keywords.
@@ -79,6 +76,11 @@ def main():
     """
     Main function to run the Streamlit app.
     """
+    st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
+
+    # Initialize session state
+    initialize_llm_context()
+
     st.title("Google Ads Keyword Planner")
 
     # Fetch and display keyword suggestions
@@ -123,7 +125,6 @@ def main():
                 ppc_plan = generate_ppc_plan(selected_keywords)
                 st.subheader("Generated PPC Plan")
                 st.write(ppc_plan)
-
 
 if __name__ == "__main__":
     main()
