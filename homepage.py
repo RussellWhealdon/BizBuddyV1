@@ -1,142 +1,147 @@
+import openai
 import streamlit as st
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
-import re
-from collections import Counter
-from llm_integration import query_gpt  # Importing for GPT functionality
+from datetime import date
+from ga4_data_pull import *
+from gsc_data_pull import *
+from llm_integration import *
+from urllib.parse import quote
 
-def fetch_website_content(url):
-    """
-    Fetch content from the given URL.
-    """
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.text
-    else:
-        st.error(f"Failed to fetch content from {url}")
-        return ""
+# Page configuration
+st.set_page_config(page_title="BizBuddy", layout="wide", page_icon = "🤓")
+#,menu_items={
+#'SEO Analysis': 'https://www.extremelycoolapp.com/help',
+#'Paid Search Planner': "https://www.extremelycoolapp.com/bug",
+#'Website Deep Dive': "# This is a header. This is an *extremely* cool app!"})
 
-def clean_and_extract_keywords(text, num_keywords=6):
-    """
-    Clean text and extract the most common keywords.
-    """
-    words = re.findall(r'\b\w+\b', text.lower())
-    
-    stopwords = set(["the", "and", "is", "in", "to", "for", "on", "with", "at", "by", "of", "a", "an", "as", "it", "or", "be", "that", "this", "from", "you", "your"])
-    
-    filtered_words = [word for word in words if word not in stopwords and len(word) > 2]
-    
-    freq_dist = Counter(filtered_words)
-    common_words = freq_dist.most_common(num_keywords)
-    return [word for word, _ in common_words]
+st.markdown("<h1 style='text-align: center;'>Welcome to BizBuddy: Let's Grow Your Digital Presence</h1>", unsafe_allow_html=True)
 
-def load_data(file_path):
-    """
-    Load keyword data from a CSV file, skipping the first two rows.
-    """
-    try:
-        df = pd.read_csv(file_path, skiprows=2)  # Skip the first two rows
-        return df
-    except FileNotFoundError:
-        st.error(f"File '{file_path}' not found. Please check the file name or location.")
-        return pd.DataFrame()
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
-        return pd.DataFrame()
 
-def filter_data(df, query):
-    """
-    Filter the dataframe based on a search query.
-    """
-    if query:
-        return df[df.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)]
-    return df
+def generate_seo_insights(search_data):
+# Prepare the search query list
+query_list = search_data["Search Query"].unique()
+formatted_queries = "\n".join(query_list)
 
-def display_sidebar():
-    """
-    Display sidebar instructions and notes.
-    """
-    st.sidebar.header("Instructions")
-    st.sidebar.write(
-        """
-        1. The app loads keyword data from the `KeywordStats_Washington_CWN.csv` file.
-        2. Use the search box to filter the data for specific keywords.
-        3. Select 5 keywords that directly impact your business and submit them.
-        """
-    )
+# Define the prompt for the LLM
+prompt = (
+"Here are the search queries this website currently appears for:\n"
+f"{formatted_queries}\n\n"
+"Based on this data, please provide the following, make sure to bold any suggested keywords:\n"
+"- Target search terms that align with the website's goals.\n"
+"- New niche ideas for search terms that could improve conversions.\n"
+"- A brief explanation of why SEO optimization is critical for this business."
+)
 
-    st.sidebar.subheader("Notes:")
-    st.sidebar.write(
-        """
-        - Ensure the CSV file is in the correct location.
-        - The data is pre-fetched and no API calls are made in this module.
-        """
-    )
+# Call the LLM using query_gpt
+response = query_gpt(prompt)
+return response
 
-def generate_ppc_plan(keywords):
-    """
-    Generate a PPC plan using GPT based on the selected keywords.
-    """
-    prompt = (
-        "You are an expert PPC marketer. Using the following 5 keywords, create a PPC plan. "
-        "Include match type recommendations, conversion types, business context, and some example ad copy for each keyword.\n\n"
-        f"Keywords: {', '.join(keywords)}"
-    )
-    return query_gpt(prompt)
+# Initialize LLM context with business context on app load
+initialize_llm_context()
 
+# Generate and display each summary with LLM analysis
+def display_report_with_llm(summary_func, llm_prompt):
+# Generate summary
+summary = summary_func()
+
+# Query LLM with specific prompt
+llm_response = query_gpt(llm_prompt, summary)
+return llm_response
+
+
+# Run main function
 def main():
-    """
-    Main function to run the Streamlit app.
-    """
-    st.set_page_config(page_title="Google Ads Keyword Planner", layout="wide")
-    st.title("Google Ads Keyword Planner")
 
-    # Fetch and display keyword suggestions
-    st.subheader("Suggested Keywords Based on Your Website")
-    url = "https://www.chelseawnutrition.com/"
-    html_content = fetch_website_content(url)
-    if html_content:
-        soup = BeautifulSoup(html_content, 'html.parser')
-        text = soup.get_text()
-        keywords = clean_and_extract_keywords(text)
-        st.write(", ".join(keywords))
+ga_data = fetch_ga4_extended_data()
+search_data = fetch_search_console_data()
 
-    # Load and display keyword data
-    st.subheader("What People Are Searching for Related to Your Website")
-    uploaded_file = "KeywordStats_Washington_CWN.csv"
-    try:
-        df = load_data(uploaded_file)
-        search_query = st.text_input("Search for Keywords:", value="")
-        filtered_df = filter_data(df, search_query)
-        with st.expander("View Keyword Data", expanded=True):
-            st.dataframe(filtered_df, use_container_width=True)
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
 
-    # Keyword selection and PPC plan generation
-    st.subheader("Select 5 keywords that have search volume and are directly related to your business/website.")
-    selected_keywords = []
-    for i in range(5):
-        keyword = st.text_input(f"Keyword {i+1}")
-        if keyword:
-            selected_keywords.append(keyword)
+col1, col2, = st.columns(2)
 
-    if st.button("Submit Keywords"):
-        if len(selected_keywords) < 5:
-            st.error("Please enter all 5 keywords before submitting.")
-        else:
-            st.success("You have successfully submitted your keywords!")
-            st.write("Selected Keywords:", selected_keywords)
+with col1:
+st.markdown("<h3 style='text-align: center;'>Web Performance Overview</h3>", unsafe_allow_html=True)
+#st.write(ga_data)
+generate_all_metrics_copy(summarize_monthly_data(ga_data)[0], summarize_last_month_data(ga_data)[0])
 
-            # Generate PPC Plan
-            with st.spinner("Generating PPC Plan..."):
-                ppc_plan = generate_ppc_plan(selected_keywords)
-                st.subheader("Generated PPC Plan")
-                st.write(ppc_plan)
+# Generate and display GA4 metrics
+current_summary = summarize_monthly_data(ga_data)[0]
+last_month_summary = summarize_last_month_data(ga_data)[0]
 
-    # Sidebar instructions
-    display_sidebar()
+# Use LLM to generate insights based on GA data
+ga_llm_prompt = """
+   Based on the following website performance metrics, provide a short analysis. Highlight key improvements, areas needing attention, 
+   and how these metrics compare to typical industry standards. Limit your response to 2-3 bullet points.
+   """
 
+# Combine summaries into data string for LLM
+metric_summary_text = "\n".join([f"{row['Metric']}: {row['Value']}" for _, row in current_summary.iterrows()])
+
+ga_insights = query_gpt(ga_llm_prompt, metric_summary_text)
+
+st.markdown("### Insights from AI")
+st.markdown(ga_insights)
+
+
+with col2:
+st.markdown("<h3 style='text-align: center;'>Acquisition Overview</h3>", unsafe_allow_html=True)
+acq_col1, acq_col2 = st.columns(2)
+with acq_col1:
+plot_acquisition_pie_chart_plotly(summarize_monthly_data(ga_data)[1])
+with acq_col2:
+describe_top_sources(summarize_monthly_data(ga_data)[1])
+      temp_url = "https://www.google.com/"
+      temp_url = "https://bizbuddyv1-ppcbuddy.streamlit.app/"
+
+st.markdown("Search and social ads are key to driving traffic, helping businesses reach people actively searching or discovering new products on social platforms. Check out these tools to help you get going.")
+#Button links
+st.link_button("Paid Search - Helper", temp_url)
+st.link_button("Social Ads - Helper", temp_url)
+
+
+###landing page analysis section
+st.divider()
+
+col3, col4 = st.columns(2)
+with col3:
+st.markdown("<h3 style='text-align: center;'>Individual Page Overview</h3>", unsafe_allow_html=True)
+
+# Ensure the 'Date' column is in the correct format
+ga_data['Date'] = pd.to_datetime(ga_data['Date'], errors='coerce').dt.date
+
+# Get the date 30 days ago
+today = date.today()
+start_of_period = today - timedelta(days=30)
+
+# Filter data for the last 30 days
+last_30_days_data = ga_data[ga_data['Date'] >= start_of_period]
+landing_page_summary = summarize_landing_pages(last_30_days_data)[1]
+
+# Display the DataFrame for landing page performance
+generate_page_summary(landing_page_summary)
+
+llm_input = st.session_state.get("page_summary_llm", "")
+response = query_gpt("Provide insights based on the following page performance data, note that there is no CTAs on any page besides the Home. We need to think of ways to drive more people to the contact page. State only the bullets, no pre text. Limit your response to 2-3 bullet points:", llm_input)
+st.markdown("### Insights from AI")
+st.markdown(response)
+
+with col4:
+st.markdown("<h3 style='text-align: center;'>Search Query Analysis</h3>", unsafe_allow_html=True)
+sq_col1, sq_col2 = st.columns(2)
+with sq_col1:
+st.markdown("These are all the search terms that your website has shown up for in the search results. The Google search engine shows websites based on the relevance of a websites information as it realtes to the search terms.")
+search_data = fetch_search_console_data()
+st.dataframe(search_data['Search Query'], use_container_width = True)
+
+with sq_col2:
+seo_insights = generate_seo_insights(search_data)
+st.markdown(seo_insights)
+encoded_message = quote(str(seo_insights))
+seo_url = f"https://bizbuddyv1-seobuddy.streamlit.app?message={encoded_message}"
+st.link_button("Check Out our SEO Helper!!", seo_url)
+
+
+
+# Execute the main function only when the script is run directly
 if __name__ == "__main__":
-    main()
+main()
+
