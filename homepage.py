@@ -143,5 +143,5 @@ def main():
 
 # Execute the main function only when the script is run directly
 if __name__ == "__main__":
-main()
+   main()
 
