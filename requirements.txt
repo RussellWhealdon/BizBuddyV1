@@ -20,3 +20,6 @@ google-ads==25.1.0
 
 # For plotting
 plotly==5.24.1
+
+# For text summarization/tokenization
+nltk==3.9.1
