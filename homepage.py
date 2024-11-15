@@ -22,15 +22,15 @@ def generate_seo_insights(search_data):
    query_list = search_data["Search Query"].unique()
    formatted_queries = "\n".join(query_list)
 
-# Define the prompt for the LLM
-prompt = (
-"Here are the search queries this website currently appears for:\n"
-f"{formatted_queries}\n\n"
-"Based on this data, please provide the following, make sure to bold any suggested keywords:\n"
-"- Target search terms that align with the website's goals.\n"
-"- New niche ideas for search terms that could improve conversions.\n"
-"- A brief explanation of why SEO optimization is critical for this business."
-)
+   # Define the prompt for the LLM
+   prompt = (
+   "Here are the search queries this website currently appears for:\n"
+   f"{formatted_queries}\n\n"
+   "Based on this data, please provide the following, make sure to bold any suggested keywords:\n"
+   "- Target search terms that align with the website's goals.\n"
+   "- New niche ideas for search terms that could improve conversions.\n"
+   "- A brief explanation of why SEO optimization is critical for this business."
+   )
 
    # Call the LLM using query_gpt
    response = query_gpt(prompt)
