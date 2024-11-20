@@ -85,6 +85,16 @@ def fetch_ga4_extended_data():
 
 # Get summary of acquisition sources
 def summarize_acquisition_sources(acquisition_data):
+    
+    acquisition_data['Date'] = pd.to_datetime(acquisition_data['Date'], errors='coerce').dt.date
+
+    # Get the date 30 days ago
+    today = date.today()
+    start_of_period = today - timedelta(days=30)
+    
+    # Filter data for the last 30 days
+    monthly_data = acquisition_data[acquisition_data['Date'] >= start_of_period]
+    
     # Check if required columns are in the dataframe
     required_cols = ["Session Source", "Sessions", "Bounce Rate", "Event Count"]
     if not all(col in acquisition_data.columns for col in required_cols):
