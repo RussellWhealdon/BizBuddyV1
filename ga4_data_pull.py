@@ -16,10 +16,10 @@ client = BetaAnalyticsDataClient.from_service_account_info(service_account_info)
 # Get todays date
 today = date.today().strftime("%Y-%m-%d")
 
-def fetch_ga4_extended_data():
+# Get start date
+start_date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d")
 
-    start_date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d")
-    
+def fetch_ga4_extended_data():
     request = RunReportRequest(
         property=f"properties/{property_id}",
         dimensions=[
