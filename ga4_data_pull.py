@@ -37,7 +37,7 @@ def fetch_ga4_extended_data():
             Metric(name="newUsers"),                   # New visitors
             Metric(name="eventCount"),                 # Event counts (e.g., leads)                       
         ],
-        date_ranges=[DateRange(start_date="2024-01-01", end_date=today)],  # Define date range
+        date_ranges=[DateRange(start_date="2024-10-21", end_date=today)],  # Define date range
     )
     
     response = client.run_report(request)
