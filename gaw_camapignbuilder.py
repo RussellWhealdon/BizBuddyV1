@@ -28,13 +28,23 @@ def main():
             # Query the LLM using the provided description
             with st.spinner("Generating keyword suggestions..."):
                 llm_response = query_gpt(
-                    prompt="Generate a list of potential paid search keywords grouped into ad groups based on the following business description.",
+                    prompt=(
+                        "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
+                        "At the end of the response, include all keywords in the campaign, separated by commas, and prefixed by a '|' character. "
+                        "The grouped keywords should be clear for campaign use, and the final list of all keywords should allow easy extraction."
+                    ),
                     data_summary=business_description
                 )
             # Display the LLM response
             st.success("Keywords generated successfully!")
             st.write("Here are the keyword suggestions grouped into ad groups:")
             st.write(llm_response)
+
+            # Extract keywords if the response includes a "|"
+            if "|" in llm_response:
+                all_keywords = llm_response.split("|")[-1].strip()
+                st.write("Extracted Keywords for Campaign:")
+                st.write(all_keywords)
         else:
             st.error("Please provide a description of your business before proceeding.")
 
