@@ -66,7 +66,7 @@ def main():
                 try:
                     keyword_list = json.loads(extracted_json)  # Parse JSON
                     st.write("Parsed DataFrame:")
-                    st.dataframe(keyword_list)  # Display as a DataFrame
+                    st.dataframe(keyword_list, use_container_width = True)  # Display as a DataFrame
                 except json.JSONDecodeError:
                     st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
