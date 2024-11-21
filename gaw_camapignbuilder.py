@@ -32,7 +32,8 @@ def main():
                         "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
                         "Format the output as follows to make it easy to turn into a data frame: "
                         "'Keyword, Ad Group' on each line, where 'Keyword' is the search term, and 'Ad Group' is the group it belongs to. "
-                        "The grouped keywords should be clear for campaign use, and the format should ensure easy processing into a DataFrame."
+                        "Right before the keyword list, write exactly this text: 'Begin Keyword List:'. "
+                        "Ensure there is no additional text after the list of keywords and ad groups."
                     ),
                     data_summary=business_description
                 )
