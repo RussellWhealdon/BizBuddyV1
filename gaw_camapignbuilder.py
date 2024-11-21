@@ -9,20 +9,20 @@ def main():
 
     # Step 1: Collect information about the business
     st.header("Step 1: Tell us about your business")
-    st.write("Enter a short description of your business, the specific services you provide, "
-             "and what customers might search for when looking for a business like yours.")
+    st.write("Please enter a short prompt about your business, specific services, and what customers might search for "
+             "if they were looking for a business like yours.")
 
-    # Input fields for user description
-    business_name = st.text_input("Business Name", placeholder="E.g., Chelsea Whealdon Nutrition")
+    # Input field for user description
     business_description = st.text_area("Business Description", 
-                                         placeholder="Describe your business, services, and target audience...")
-    customer_search_terms = st.text_area("Customer Search Terms",
-                                         placeholder="List any words or phrases customers might use to find you...")
+                                         placeholder="E.g., 'A nutrition counseling service specializing in eating disorder recovery, intuitive eating, and chronic disease management. Customers might search for terms like 'nutritionist near me,' 'eating disorder dietitian,' or 'virtual dietitian.'")
 
     # Button to proceed to the next step
     if st.button("Next Step"):
-        st.success("Thank you! Proceeding to the next step...")
-        # In the next step, you would add logic to process this input and proceed further
+        if business_description.strip():
+            st.success("Thank you! Proceeding to the next step...")
+            # In the next step, you would add logic to process this input and proceed further
+        else:
+            st.error("Please provide a description of your business before proceeding.")
 
 if __name__ == "__main__":
     main()
