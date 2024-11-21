@@ -73,17 +73,36 @@ def main():
     if "keywords_df" in st.session_state:
         st.header("Refine Keyword List")
 
-        # Multiselect widget for refining keywords with better display
+        # Allow user to add new keywords
+        st.subheader("Add a New Keyword")
+        new_keyword = st.text_input("Enter a new keyword:")
+        new_ad_group = st.selectbox("Select an ad group:", st.session_state["keywords_df"]["Ad Group"].unique())
+
+        if st.button("Add Keyword"):
+            if new_keyword.strip() and new_ad_group.strip():
+                new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
+                updated_df = pd.concat([st.session_state["keywords_df"], pd.DataFrame([new_row])], ignore_index=True)
+                st.session_state["keywords_df"] = updated_df
+                st.session_state["selected_keywords"].append(new_keyword.strip())
+                st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
+            else:
+                st.error("Please enter a valid keyword and select an ad group.")
+
+        # Multiselect widget for refining keywords with improved formatting
+        st.subheader("Select Keywords to Keep")
         selected_keywords = st.multiselect(
-            "Select keywords to keep (Hover to see full terms):",
-            options=st.session_state["keywords_df"]["Keyword"].tolist(),
-            default=st.session_state["selected_keywords"],
-            format_func=lambda x: x[:50] + "..." if len(x) > 50 else x,  # Truncate for display but show full on hover
-            help="Uncheck a term to remove it from the final list."
+            "Check keywords to include in the final list:",
+            options=[f"{kw} ({ad})" for kw, ad in zip(
+                st.session_state["keywords_df"]["Keyword"],
+                st.session_state["keywords_df"]["Ad Group"]
+            )],
+            default=[f"{kw} ({ad})" for kw in st.session_state["selected_keywords"]],
+            help="The format is 'Keyword (Ad Group)'. Uncheck a term to remove it."
         )
 
         # Update the selected keywords in session state
-        st.session_state["selected_keywords"] = selected_keywords
+        selected_keywords_cleaned = [kw.split(" (")[0] for kw in selected_keywords]  # Extract just the keywords
+        st.session_state["selected_keywords"] = selected_keywords_cleaned
 
         # Filter the DataFrame based on the user's selection
         refined_df = st.session_state["keywords_df"][
@@ -91,20 +110,6 @@ def main():
         ]
 
         st.dataframe(refined_df, use_container_width=True)
-
-        # Allow user to add new keywords
-        st.subheader("Add a New Keyword")
-        new_keyword = st.text_input("Enter a new keyword:")
-        new_ad_group = st.selectbox("Select an ad group:", refined_df["Ad Group"].unique())
-
-        if st.button("Add Keyword"):
-            if new_keyword.strip() and new_ad_group.strip():
-                new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
-                refined_df = pd.concat([refined_df, pd.DataFrame([new_row])], ignore_index=True)
-                st.session_state["keywords_df"] = refined_df
-                st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
-            else:
-                st.error("Please enter a valid keyword and select an ad group.")
 
         # Button to accept the keywords
         if st.button("Okay"):
