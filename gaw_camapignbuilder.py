@@ -1,5 +1,5 @@
 import streamlit as st
-from llm_integration import initialize_llm_context, query_gpt
+import llm_integration
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
@@ -27,7 +27,7 @@ def main():
         if business_description.strip():
             # Query the LLM using the provided description
             with st.spinner("Generating keyword suggestions..."):
-                llm_response = query_gpt(
+                llm_response = query_gpt_keywordbuilder(
                     prompt=(
                         "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
                         "At the end of the response, include all keywords in the campaign, separated by commas, and prefixed by a '|' character. "
