@@ -46,7 +46,8 @@ def main():
             with st.spinner("Generating keyword suggestions..."):
                 llm_response = query_gpt_keywordbuilder(
                     prompt=(
-                        "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
+                        "Generate a list of exactly 15 paid search keywords grouped into 3 ad groups based on the following business description. "
+                        "Each ad group should contain 5 keywords. "
                         "Return the response as a JSON-formatted list of dictionaries, where each dictionary has the following structure: "
                         '{"Keyword": "Keyword 1", "Ad Group": "Ad Group 1"}. '
                         "Ensure that the only output is the JSON list of dictionaries with no additional text before or after."
@@ -66,7 +67,7 @@ def main():
                 try:
                     keyword_list = json.loads(extracted_json)  # Parse JSON
                     st.write("Parsed DataFrame:")
-                    st.dataframe(keyword_list, use_container_width = True)  # Display as a DataFrame
+                    st.dataframe(keyword_list, use_container_width=True)  # Display as a DataFrame with full width
                 except json.JSONDecodeError:
                     st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
