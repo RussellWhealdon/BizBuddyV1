@@ -58,5 +58,5 @@ def query_gpt_keywordbuilder(prompt, data_summary=""):
         
         return answer
 
-     except Exception as e:
+    except Exception as e:
         return f"Error: {e}"
