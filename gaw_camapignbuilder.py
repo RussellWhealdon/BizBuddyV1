@@ -77,37 +77,40 @@ def main():
     # Display and allow editing of keywords if they exist in session state
     if "keywords_df" in st.session_state:
         st.header("Refine Keyword List")
+        st.write("Keywords and ad groups help organize your campaigns for better performance. "
+                 "Group similar keywords together under a single ad group. Simplicity and consolidation "
+                 "are best practices to make your campaigns easier to manage and optimize.")
 
-        # Allow user to add new keywords
-        st.subheader("Add a New Keyword")
-        new_keyword = st.text_input("Enter a new keyword:")
-        new_ad_group = st.selectbox("Select an ad group:", st.session_state["keywords_df"]["Ad Group"].unique())
+        # Section: Remove Generated Keywords
+        with st.expander("Remove Generated Keywords"):
+            updated_checkboxes = {}
+            for keyword, is_checked in st.session_state["keyword_checkboxes"].items():
+                updated_checkboxes[keyword] = st.checkbox(keyword, value=is_checked)
+            st.session_state["keyword_checkboxes"] = updated_checkboxes
 
-        if st.button("Add Keyword"):
-            if new_keyword.strip() and new_ad_group.strip():
-                new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
-                updated_df = pd.concat([st.session_state["keywords_df"], pd.DataFrame([new_row])], ignore_index=True)
-                st.session_state["keywords_df"] = updated_df
-                st.session_state["keyword_checkboxes"][f"{new_keyword.strip()} ({new_ad_group.strip()})"] = True
-                st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
-            else:
-                st.error("Please enter a valid keyword and select an ad group.")
+        # Section: Add Your Own Keyword
+        with st.expander("Add Your Own Keyword"):
+            new_keyword = st.text_input("Enter a new keyword:")
+            new_ad_group = st.selectbox("Select an ad group:", st.session_state["keywords_df"]["Ad Group"].unique())
 
-        # Checkbox system for refining keywords
-        st.subheader("Select Keywords to Keep")
-        updated_checkboxes = {}
-        for keyword, is_checked in st.session_state["keyword_checkboxes"].items():
-            updated_checkboxes[keyword] = st.checkbox(keyword, value=is_checked)
-
-        # Update session state with refined selections
-        st.session_state["keyword_checkboxes"] = updated_checkboxes
+            if st.button("Add Keyword"):
+                if new_keyword.strip() and new_ad_group.strip():
+                    new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
+                    updated_df = pd.concat([st.session_state["keywords_df"], pd.DataFrame([new_row])], ignore_index=True)
+                    st.session_state["keywords_df"] = updated_df
+                    st.session_state["keyword_checkboxes"][f"{new_keyword.strip()} ({new_ad_group.strip()})"] = True
+                    st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
+                else:
+                    st.error("Please enter a valid keyword and select an ad group.")
 
         # Filter the DataFrame based on the checkboxes
-        refined_keywords = [k.split(" (")[0] for k, v in updated_checkboxes.items() if v]
+        refined_keywords = [k.split(" (")[0] for k, v in st.session_state["keyword_checkboxes"].items() if v]
         refined_df = st.session_state["keywords_df"][
             st.session_state["keywords_df"]["Keyword"].isin(refined_keywords)
         ]
 
+        # Display the refined DataFrame with a title
+        st.subheader("Your Keyword List")
         st.dataframe(refined_df, use_container_width=True)
 
         # Button to accept the keywords
