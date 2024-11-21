@@ -2,6 +2,7 @@ import streamlit as st
 from llm_integration import query_gpt_keywordbuilder, initialize_llm_context
 import json
 import re
+import pandas as pd
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
@@ -59,21 +60,34 @@ def main():
             extracted_json = extract_json_like_content(llm_response)
 
             if extracted_json:
-                st.success("Keywords extracted successfully!")
-                st.write("Extracted Content:")
-                st.text_area("Extracted JSON-Like Content", value=extracted_json, height=300)
-
-                # Attempt to parse the JSON-like content
                 try:
                     keyword_list = json.loads(extracted_json)  # Parse JSON
-                    st.write("Parsed DataFrame:")
-                    st.dataframe(keyword_list, use_container_width=True)  # Display as a DataFrame with full width
+                    df = pd.DataFrame(keyword_list)  # Convert to DataFrame
+                    st.success("Keywords generated successfully!")
+
+                    # Display the DataFrame and allow users to remove keywords
+                    st.write("Here is your keyword list. Use the options below to refine it:")
+                    terms_to_keep = st.multiselect(
+                        "Select keywords to keep:",
+                        options=df["Keyword"].tolist(),
+                        default=df["Keyword"].tolist(),
+                        help="Uncheck a term to remove it from the final list."
+                    )
+
+                    # Update the DataFrame based on the user's selections
+                    refined_df = df[df["Keyword"].isin(terms_to_keep)]
+
+                    st.dataframe(refined_df, use_container_width=True)
+
+                    # Button to accept the keywords
+                    if st.button("Okay"):
+                        st.success("Keywords accepted! Here is your final list:")
+                        st.dataframe(refined_df, use_container_width=True)
+
                 except json.JSONDecodeError:
                     st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
                 st.error("Could not extract content inside brackets. Please check the LLM response.")
-                st.write("Raw LLM Response:")
-                st.text_area("LLM Response", value=llm_response, height=300)
 
         else:
             st.error("Please provide a description of your business before proceeding.")
