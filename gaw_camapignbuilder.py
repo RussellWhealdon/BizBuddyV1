@@ -1,5 +1,7 @@
 import streamlit as st
 from llm_integration import query_gpt_keywordbuilder, initialize_llm_context
+import pandas as pd
+import json
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
@@ -30,18 +32,24 @@ def main():
                 llm_response = query_gpt_keywordbuilder(
                     prompt=(
                         "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
-                        "Format the output as follows to make it easy to turn into a data frame: "
-                        "'Keyword, Ad Group' on each line, where 'Keyword' is the search term, and 'Ad Group' is the group it belongs to. "
-                        "Right before the keyword list, write exactly this text: 'Begin Keyword List:'. "
-                        "Ensure there is no additional text after the list of keywords and ad groups."
+                        "Return the response as a JSON-formatted list of dictionaries, where each dictionary has the following structure: "
+                        '{"Keyword": "Keyword 1", "Ad Group": "Ad Group 1"}. '
+                        "Ensure that the only output is the JSON list of dictionaries with no additional text before or after."
                     ),
                     data_summary=business_description
                 )
-            # Display the LLM response
-            st.success("Keywords generated successfully!")
-            st.write("Here are the keyword suggestions grouped into ad groups:")
-            st.write(llm_response)
 
+            # Parse the LLM response and display results
+            try:
+                keyword_list = json.loads(llm_response)  # Parse JSON
+                df = pd.DataFrame(keyword_list)  # Convert to DataFrame
+
+                st.success("Keywords generated successfully!")
+                st.write("Here is the DataFrame of your keywords and ad groups:")
+                st.dataframe(df)
+
+            except json.JSONDecodeError:
+                st.error("Failed to parse the LLM response. Please try again.")
         else:
             st.error("Please provide a description of your business before proceeding.")
 
