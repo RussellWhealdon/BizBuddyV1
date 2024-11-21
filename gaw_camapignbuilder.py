@@ -1,7 +1,5 @@
 import streamlit as st
 from llm_integration import query_gpt_keywordbuilder, initialize_llm_context
-import pandas as pd
-import json
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
@@ -39,17 +37,11 @@ def main():
                     data_summary=business_description
                 )
 
-            # Parse the LLM response and display results
-            try:
-                keyword_list = json.loads(llm_response)  # Parse JSON
-                df = pd.DataFrame(keyword_list)  # Convert to DataFrame
+            # Display the raw LLM response
+            st.success("Keywords generated successfully!")
+            st.write("Here is the raw response from the LLM:")
+            st.text_area("LLM Response", value=llm_response, height=300)
 
-                st.success("Keywords generated successfully!")
-                st.write("Here is the DataFrame of your keywords and ad groups:")
-                st.dataframe(df)
-
-            except json.JSONDecodeError:
-                st.error("Failed to parse the LLM response. Please try again.")
         else:
             st.error("Please provide a description of your business before proceeding.")
 
