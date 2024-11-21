@@ -1,5 +1,5 @@
 import streamlit as st
-import llm_integration
+from llm_integration import *
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
