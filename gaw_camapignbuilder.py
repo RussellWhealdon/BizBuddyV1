@@ -30,8 +30,9 @@ def main():
                 llm_response = query_gpt_keywordbuilder(
                     prompt=(
                         "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
-                        "At the end of the response, include all keywords in the campaign, separated by commas. "
-                        "The grouped keywords should be clear for campaign use, and the final list of all keywords should allow easy extraction."
+                        "Format the output as follows to make it easy to turn into a data frame: "
+                        "'Keyword, Ad Group' on each line, where 'Keyword' is the search term, and 'Ad Group' is the group it belongs to. "
+                        "The grouped keywords should be clear for campaign use, and the format should ensure easy processing into a DataFrame."
                     ),
                     data_summary=business_description
                 )
@@ -40,11 +41,6 @@ def main():
             st.write("Here are the keyword suggestions grouped into ad groups:")
             st.write(llm_response)
 
-            # Extract keywords if the response includes a comma-separated list
-            if "," in llm_response:
-                all_keywords = llm_response.split(",")[-1].strip()
-                st.write("Extracted Keywords for Campaign:")
-                st.write(all_keywords)
         else:
             st.error("Please provide a description of your business before proceeding.")
 
