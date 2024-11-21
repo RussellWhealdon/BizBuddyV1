@@ -71,13 +71,14 @@ def main():
 
     # Display and allow editing of keywords if they exist in session state
     if "keywords_df" in st.session_state:
-        st.write("Here is your keyword list. Use the options below to refine it:")
+        st.header("Refine Keyword List")
 
-        # Multiselect widget for refining keywords
+        # Multiselect widget for refining keywords with better display
         selected_keywords = st.multiselect(
-            "Select keywords to keep:",
+            "Select keywords to keep (Hover to see full terms):",
             options=st.session_state["keywords_df"]["Keyword"].tolist(),
             default=st.session_state["selected_keywords"],
+            format_func=lambda x: x[:50] + "..." if len(x) > 50 else x,  # Truncate for display but show full on hover
             help="Uncheck a term to remove it from the final list."
         )
 
@@ -90,6 +91,20 @@ def main():
         ]
 
         st.dataframe(refined_df, use_container_width=True)
+
+        # Allow user to add new keywords
+        st.subheader("Add a New Keyword")
+        new_keyword = st.text_input("Enter a new keyword:")
+        new_ad_group = st.selectbox("Select an ad group:", refined_df["Ad Group"].unique())
+
+        if st.button("Add Keyword"):
+            if new_keyword.strip() and new_ad_group.strip():
+                new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
+                refined_df = pd.concat([refined_df, pd.DataFrame([new_row])], ignore_index=True)
+                st.session_state["keywords_df"] = refined_df
+                st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
+            else:
+                st.error("Please enter a valid keyword and select an ad group.")
 
         # Button to accept the keywords
         if st.button("Okay"):
