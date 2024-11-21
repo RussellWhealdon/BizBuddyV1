@@ -88,28 +88,34 @@ def main():
             else:
                 st.error("Please enter a valid keyword and select an ad group.")
 
-            # Multiselect widget for refining keywords with improved formatting
-            st.subheader("Select Keywords to Keep")
-            keyword_adgroup_pairs = [
-                f"{kw} ({ad})" for kw, ad in zip(
-                    st.session_state["keywords_df"]["Keyword"],
-                    st.session_state["keywords_df"]["Ad Group"]
-                )
-            ]
-            
-            selected_keywords = st.multiselect(
-                "Check keywords to include in the final list:",
-                options=keyword_adgroup_pairs,
-                default=[f"{kw} ({ad})" for kw, ad in zip(
-                    st.session_state["selected_keywords"],
-                    st.session_state["keywords_df"]["Ad Group"]
-                )],
-                help="The format is 'Keyword (Ad Group)'. Uncheck a term to remove it."
+        # Multiselect widget for refining keywords with improved formatting
+        st.subheader("Select Keywords to Keep")
+        keyword_adgroup_pairs = [
+            f"{kw} ({ad})" for kw, ad in zip(
+                st.session_state["keywords_df"]["Keyword"],
+                st.session_state["keywords_df"]["Ad Group"]
             )
-            
-            # Update the selected keywords in session state
-            selected_keywords_cleaned = [kw.split(" (")[0] for kw in selected_keywords]  # Extract just the keywords
-            st.session_state["selected_keywords"] = selected_keywords_cleaned
+        ]
+
+        # Ensure the default selection matches the updated options
+        default_selected_pairs = [
+            f"{kw} ({ad})" for kw, ad in zip(
+                st.session_state["selected_keywords"],
+                st.session_state["keywords_df"]["Ad Group"]
+            )
+            if kw in st.session_state["selected_keywords"]
+        ]
+
+        selected_keywords = st.multiselect(
+            "Check keywords to include in the final list:",
+            options=keyword_adgroup_pairs,
+            default=default_selected_pairs,
+            help="The format is 'Keyword (Ad Group)'. Uncheck a term to remove it."
+        )
+
+        # Update the selected keywords in session state
+        selected_keywords_cleaned = [kw.split(" (")[0] for kw in selected_keywords]  # Extract just the keywords
+        st.session_state["selected_keywords"] = selected_keywords_cleaned
 
         # Filter the DataFrame based on the user's selection
         refined_df = st.session_state["keywords_df"][
