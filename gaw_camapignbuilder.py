@@ -1,10 +1,12 @@
 import streamlit as st
-from llm_integration import *
+from llm_integration import query_gpt_keywordbuilder, initialize_llm_context
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
 
 def main():
+    # Initialize LLM session context
+    initialize_llm_context()
 
     # Set up the app title
     st.title("Keyword Campaign Builder")
@@ -17,7 +19,7 @@ def main():
     # Input field for user description
     business_description = st.text_area(
         "Business Description", 
-        placeholder="E.g., 'A nutrition counseling service specializing in eating disorder recovery, intuitive eating, and chronic disease management. Customers might search for terms like 'nutritionist near me,' 'eating disorder dietitian,' or 'virtual dietitian.'"
+        placeholder="E.g., 'A sports psychologist in Boise, Idaho, specializing in 1-on-1 coaching, team workshops, and mental performance plans. Customers might search for terms like 'sports psychologist,' 'sports mental coach,' or 'mental fatigue in athletes.'"
     )
 
     # Button to process and query LLM
@@ -28,7 +30,7 @@ def main():
                 llm_response = query_gpt_keywordbuilder(
                     prompt=(
                         "Generate a list of potential paid search keywords grouped into ad groups based on the following business description. "
-                        "At the end of the response, include all keywords in the campaign, separated by commas, and prefixed by a '|' character. "
+                        "At the end of the response, include all keywords in the campaign, separated by commas. "
                         "The grouped keywords should be clear for campaign use, and the final list of all keywords should allow easy extraction."
                     ),
                     data_summary=business_description
@@ -38,9 +40,9 @@ def main():
             st.write("Here are the keyword suggestions grouped into ad groups:")
             st.write(llm_response)
 
-            # Extract keywords if the response includes a "|"
-            if "|" in llm_response:
-                all_keywords = llm_response.split("|")[-1].strip()
+            # Extract keywords if the response includes a comma-separated list
+            if "," in llm_response:
+                all_keywords = llm_response.split(",")[-1].strip()
                 st.write("Extracted Keywords for Campaign:")
                 st.write(all_keywords)
         else:
