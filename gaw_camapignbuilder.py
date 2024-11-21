@@ -40,7 +40,7 @@ def main():
         placeholder="E.g., 'A sports psychologist in Boise, Idaho, specializing in 1-on-1 coaching, team workshops, and mental performance plans. Customers might search for terms like 'sports psychologist,' 'sports mental coach,' or 'mental fatigue in athletes.'"
     )
 
-    # Button to process and query LLM
+    # Generate Keywords Button
     if st.button("Generate Keywords"):
         if business_description.strip():
             # Query the LLM using the provided description
@@ -62,35 +62,39 @@ def main():
             if extracted_json:
                 try:
                     keyword_list = json.loads(extracted_json)  # Parse JSON
-                    df = pd.DataFrame(keyword_list)  # Convert to DataFrame
-                    st.success("Keywords generated successfully!")
-
-                    # Display the DataFrame and allow users to remove keywords
-                    st.write("Here is your keyword list. Use the options below to refine it:")
-                    terms_to_keep = st.multiselect(
-                        "Select keywords to keep:",
-                        options=df["Keyword"].tolist(),
-                        default=df["Keyword"].tolist(),
-                        help="Uncheck a term to remove it from the final list."
-                    )
-
-                    # Update the DataFrame based on the user's selections
-                    refined_df = df[df["Keyword"].isin(terms_to_keep)]
-
-                    st.dataframe(refined_df, use_container_width=True)
-
-                    # Button to accept the keywords
-                    if st.button("Okay"):
-                        st.success("Keywords accepted! Here is your final list:")
-                        st.dataframe(refined_df, use_container_width=True)
-
+                    st.session_state["keywords_df"] = pd.DataFrame(keyword_list)  # Save DataFrame in session state
+                    st.session_state["selected_keywords"] = st.session_state["keywords_df"]["Keyword"].tolist()  # Initialize selected keywords
                 except json.JSONDecodeError:
                     st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
                 st.error("Could not extract content inside brackets. Please check the LLM response.")
 
-        else:
-            st.error("Please provide a description of your business before proceeding.")
+    # Display and allow editing of keywords if they exist in session state
+    if "keywords_df" in st.session_state:
+        st.write("Here is your keyword list. Use the options below to refine it:")
+
+        # Multiselect widget for refining keywords
+        selected_keywords = st.multiselect(
+            "Select keywords to keep:",
+            options=st.session_state["keywords_df"]["Keyword"].tolist(),
+            default=st.session_state["selected_keywords"],
+            help="Uncheck a term to remove it from the final list."
+        )
+
+        # Update the selected keywords in session state
+        st.session_state["selected_keywords"] = selected_keywords
+
+        # Filter the DataFrame based on the user's selection
+        refined_df = st.session_state["keywords_df"][
+            st.session_state["keywords_df"]["Keyword"].isin(st.session_state["selected_keywords"])
+        ]
+
+        st.dataframe(refined_df, use_container_width=True)
+
+        # Button to accept the keywords
+        if st.button("Okay"):
+            st.success("Keywords accepted! Here is your final list:")
+            st.dataframe(refined_df, use_container_width=True)
 
 if __name__ == "__main__":
     main()
