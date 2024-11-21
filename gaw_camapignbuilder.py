@@ -63,7 +63,12 @@ def main():
                 try:
                     keyword_list = json.loads(extracted_json)  # Parse JSON
                     st.session_state["keywords_df"] = pd.DataFrame(keyword_list)  # Save DataFrame in session state
-                    st.session_state["selected_keywords"] = st.session_state["keywords_df"]["Keyword"].tolist()  # Initialize selected keywords
+                    st.session_state["keyword_checkboxes"] = {
+                        f"{kw} ({ad})": True for kw, ad in zip(
+                            st.session_state["keywords_df"]["Keyword"],
+                            st.session_state["keywords_df"]["Ad Group"]
+                        )
+                    }  # Initialize checkbox states
                 except json.JSONDecodeError:
                     st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
@@ -83,43 +88,24 @@ def main():
                 new_row = {"Keyword": new_keyword.strip(), "Ad Group": new_ad_group.strip()}
                 updated_df = pd.concat([st.session_state["keywords_df"], pd.DataFrame([new_row])], ignore_index=True)
                 st.session_state["keywords_df"] = updated_df
-                st.session_state["selected_keywords"].append(new_keyword.strip())
+                st.session_state["keyword_checkboxes"][f"{new_keyword.strip()} ({new_ad_group.strip()})"] = True
                 st.success(f"Added new keyword: '{new_keyword}' to Ad Group: '{new_ad_group}'!")
             else:
                 st.error("Please enter a valid keyword and select an ad group.")
 
-        # Multiselect widget for refining keywords with improved formatting
+        # Checkbox system for refining keywords
         st.subheader("Select Keywords to Keep")
-        keyword_adgroup_pairs = [
-            f"{kw} ({ad})" for kw, ad in zip(
-                st.session_state["keywords_df"]["Keyword"],
-                st.session_state["keywords_df"]["Ad Group"]
-            )
-        ]
+        updated_checkboxes = {}
+        for keyword, is_checked in st.session_state["keyword_checkboxes"].items():
+            updated_checkboxes[keyword] = st.checkbox(keyword, value=is_checked)
 
-        # Ensure the default selection matches the updated options
-        default_selected_pairs = [
-            f"{kw} ({ad})" for kw, ad in zip(
-                st.session_state["selected_keywords"],
-                st.session_state["keywords_df"]["Ad Group"]
-            )
-            if kw in st.session_state["selected_keywords"]
-        ]
+        # Update session state with refined selections
+        st.session_state["keyword_checkboxes"] = updated_checkboxes
 
-        selected_keywords = st.multiselect(
-            "Check keywords to include in the final list:",
-            options=keyword_adgroup_pairs,
-            default=default_selected_pairs,
-            help="The format is 'Keyword (Ad Group)'. Uncheck a term to remove it."
-        )
-
-        # Update the selected keywords in session state
-        selected_keywords_cleaned = [kw.split(" (")[0] for kw in selected_keywords]  # Extract just the keywords
-        st.session_state["selected_keywords"] = selected_keywords_cleaned
-
-        # Filter the DataFrame based on the user's selection
+        # Filter the DataFrame based on the checkboxes
+        refined_keywords = [k.split(" (")[0] for k, v in updated_checkboxes.items() if v]
         refined_df = st.session_state["keywords_df"][
-            st.session_state["keywords_df"]["Keyword"].isin(st.session_state["selected_keywords"])
+            st.session_state["keywords_df"]["Keyword"].isin(refined_keywords)
         ]
 
         st.dataframe(refined_df, use_container_width=True)
