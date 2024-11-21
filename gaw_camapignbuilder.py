@@ -1,9 +1,25 @@
 import streamlit as st
 from llm_integration import query_gpt_keywordbuilder, initialize_llm_context
 import json
+import re
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
+
+def extract_json_like_content(response):
+    """
+    Extracts the content inside the first matched brackets: [ ... ].
+    Returns the content including the brackets.
+    """
+    try:
+        # Use regex to find the first occurrence of [ ... ]
+        match = re.search(r"\[.*?\]", response, re.DOTALL)
+        if match:
+            return match.group(0)  # Return the matched string, including brackets
+        else:
+            return None
+    except Exception as e:
+        return None
 
 def main():
     # Initialize LLM session context
@@ -38,23 +54,26 @@ def main():
                     data_summary=business_description
                 )
 
-            # Extract the JSON part of the response
-            json_start_index = llm_response.lower().find("json")
-            if json_start_index != -1:
-                json_text = llm_response[json_start_index + 4:].strip()  # Skip 'json' and trim extra spaces
+            # Extract content inside brackets
+            extracted_json = extract_json_like_content(llm_response)
+
+            if extracted_json:
+                st.success("Keywords extracted successfully!")
+                st.write("Extracted Content:")
+                st.text_area("Extracted JSON-Like Content", value=extracted_json, height=300)
+
+                # Attempt to parse the JSON-like content
                 try:
-                    keyword_list = json.loads(json_text)  # Parse JSON
-                    st.success("Keywords generated and parsed successfully!")
-                    st.write("Here is the parsed DataFrame:")
+                    keyword_list = json.loads(extracted_json)  # Parse JSON
+                    st.write("Parsed DataFrame:")
                     st.dataframe(keyword_list)  # Display as a DataFrame
                 except json.JSONDecodeError:
-                    st.error("Failed to parse the response as JSON. Please check the LLM output.")
-                    st.write("Raw JSON Text:")
-                    st.text_area("LLM Response", value=json_text, height=300)
+                    st.error("Failed to parse the extracted content as JSON. Please check the output.")
             else:
-                st.error("The response does not contain the keyword 'json'. Please check the LLM output.")
+                st.error("Could not extract content inside brackets. Please check the LLM response.")
                 st.write("Raw LLM Response:")
                 st.text_area("LLM Response", value=llm_response, height=300)
+
         else:
             st.error("Please provide a description of your business before proceeding.")
 
