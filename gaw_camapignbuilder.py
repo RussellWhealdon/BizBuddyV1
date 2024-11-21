@@ -1,9 +1,13 @@
 import streamlit as st
+from llm_integration import initialize_llm_context, query_gpt
 
 # Set page configuration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
 
 def main():
+    # Initialize LLM session context
+    initialize_llm_context()
+
     # Set up the app title
     st.title("Keyword Campaign Builder")
 
@@ -13,14 +17,24 @@ def main():
              "if they were looking for a business like yours.")
 
     # Input field for user description
-    business_description = st.text_area("Business Description", 
-                                         placeholder="E.g., 'A nutrition counseling service specializing in eating disorder recovery, intuitive eating, and chronic disease management. Customers might search for terms like 'nutritionist near me,' 'eating disorder dietitian,' or 'virtual dietitian.'")
+    business_description = st.text_area(
+        "Business Description", 
+        placeholder="E.g., 'A nutrition counseling service specializing in eating disorder recovery, intuitive eating, and chronic disease management. Customers might search for terms like 'nutritionist near me,' 'eating disorder dietitian,' or 'virtual dietitian.'"
+    )
 
-    # Button to proceed to the next step
-    if st.button("Next Step"):
+    # Button to process and query LLM
+    if st.button("Generate Keywords"):
         if business_description.strip():
-            st.success("Thank you! Proceeding to the next step...")
-            # In the next step, you would add logic to process this input and proceed further
+            # Query the LLM using the provided description
+            with st.spinner("Generating keyword suggestions..."):
+                llm_response = query_gpt(
+                    prompt="Generate a list of potential paid search keywords grouped into ad groups based on the following business description.",
+                    data_summary=business_description
+                )
+            # Display the LLM response
+            st.success("Keywords generated successfully!")
+            st.write("Here are the keyword suggestions grouped into ad groups:")
+            st.write(llm_response)
         else:
             st.error("Please provide a description of your business before proceeding.")
 
