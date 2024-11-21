@@ -5,8 +5,6 @@ import llm_integration
 st.set_page_config(page_title="Keyword Campaign Builder", layout="wide")
 
 def main():
-    # Initialize LLM session context
-    initialize_llm_context()
 
     # Set up the app title
     st.title("Keyword Campaign Builder")
