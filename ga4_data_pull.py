@@ -18,7 +18,6 @@ today = date.today().strftime("%Y-%m-%d")
 
 # Get start date
 start_date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d")
-st.write(start_date)
 
 def fetch_ga4_extended_data():
     request = RunReportRequest(
