@@ -17,7 +17,7 @@ client = BetaAnalyticsDataClient.from_service_account_info(service_account_info)
 today = date.today().strftime("%Y-%m-%d")
 
 # Get start date
-start_date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d")
+start_date = "30daysAgo"
 
 def fetch_ga4_extended_data():
     request = RunReportRequest(
